@@ -1,0 +1,36 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="stylesheets/app.css" />
+    <script src="bower_components/modernizr/modernizr.js"></script>
+  </head>
+  <body>
+    <div class="row">
+      <div class="small-12">
+        <% if (message) { %>
+          <p><%= message %></p>
+        <% } %>
+        <h1>Login</h1>
+        <form action="/login" method="post">
+          <div class="small-12 medium-4 large-4">
+            <label class="label">Username:</label>
+            <input type="text" name="username"/><br/>
+          </div>
+          <div class="small-12 medium-4 large-4">
+            <label class="label">Password:</label>
+            <input type="password" name="password"/>
+          </div>
+          <div class="small-12 medium-4 large-4">
+            <input class="button" type="submit" value="Submit"/>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/foundation/js/foundation.min.js"></script>
+    <script src="js/custom.js"></script>
+  </body>
+</html>

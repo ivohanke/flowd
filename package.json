@@ -1,0 +1,22 @@
+{
+  "name": "noteBoard",
+  "version": "0.0.1",
+  "description": "Taskboard for Evernote",
+  "main": "app.js",
+  "dependencies": {
+    "ejs": "~0.8.5",
+    "redis": "~0.9.0",
+    "request": "~2.27.0",
+    "socket.io": "~0.9.16",
+    "url": "~0.7.9",
+    "express": "~3.4.4",
+    "passport": "~0.1.17",
+    "passport-evernote": "~0.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ivo Hanke",
+  "license": "BSD-2-Clause"
+}
