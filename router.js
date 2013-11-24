@@ -1,9 +1,21 @@
-var passport = require('passport');
+var passport = require('passport'),
+    Evernote = require('evernote').Evernote;
 
 module.exports = function(app, User) {
 
   app.get('/', function(req, res){
-    res.render('index', { user: req.user });
+    if(req.user && req.user.evernoteToken) {
+      var client = new Evernote.Client({
+        token: req.user.evernoteToken,
+        sandbox: true
+      });
+      var noteStore = client.getNoteStore();
+      noteStore.listNotebooks(function(err, notebooks){
+        res.render('index', {user: req.user, notebooks: notebooks});
+      });
+    } else {
+      res.render('index', { user: req.user });
+    }
   });
 
   app.get('/signup', function(req, res){
