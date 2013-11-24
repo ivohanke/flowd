@@ -4,6 +4,7 @@
  */
 
 var express = require('express'),
+    exphbs  = require('express3-handlebars'),
     routes = require('./routes'),
     http = require('http'),
     path = require('path'),
@@ -29,7 +30,8 @@ var userSchema = mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true},
-  evernoteToken: {type: String, required: false}
+  evernoteToken: {type: String, required: false},
+  evernoteNotebook: {type: String, required: false}
 });
 
 // Bcrypt middleware
@@ -130,7 +132,8 @@ app.configure(function() {
   app.set('port', 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
-  app.engine('ejs', require('ejs-locals'));
+  app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+  app.set('view engine', 'handlebars');
   app.locals.pretty = true;
   app.use(express.logger());
   app.use(express.cookieParser());

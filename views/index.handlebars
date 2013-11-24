@@ -1,0 +1,12 @@
+<h1>Homepage</h1>
+<p>blah blah blah</p>
+{{#if user}}
+  <ul class="no-bullets">
+  {{#each notes}}
+    <li>
+      <h3>{{this.title}}</h3>
+      <p>{{this.contentHash}}</p>
+    </li>
+  {{/each}}
+  </ul>
+{{/if}}

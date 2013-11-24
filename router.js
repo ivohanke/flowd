@@ -4,14 +4,15 @@ var passport = require('passport'),
 module.exports = function(app, User) {
 
   app.get('/', function(req, res){
-    if(req.user && req.user.evernoteToken) {
+    if(req.user && req.user.evernoteToken && req.user.evernoteNotebook) {
       var client = new Evernote.Client({
         token: req.user.evernoteToken,
         sandbox: true
       });
       var noteStore = client.getNoteStore();
-      noteStore.listNotebooks(function(err, notebooks){
-        res.render('index', {user: req.user, notebooks: notebooks});
+      var noteFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteNotebook});
+      noteStore.findNotes(req.user.evernoteToken, noteFilter, 0, 100, function(err, result) {
+        res.render('index', {user: req.user, notes: result.notes});
       });
     } else {
       res.render('index', { user: req.user });
@@ -43,7 +44,34 @@ module.exports = function(app, User) {
   });
 
   app.get('/account', ensureAuthenticated, function(req, res){
-    res.render('account', { user: req.user });
+    if(req.user && req.user.evernoteToken) {
+      var client = new Evernote.Client({
+        token: req.user.evernoteToken,
+        sandbox: true
+      });
+      var noteStore = client.getNoteStore();
+      noteStore.listNotebooks(function(err, notebooks){
+        res.render('account', {user: req.user, notebooks: notebooks});
+      });
+    } else {
+      res.render('account', { user: req.user });
+    }
+  });
+    app.post('/account', function(req, res, next){
+    if (req.body.evernoteNotebook) {
+      User.findOne({username: req.user.username}, function (err, user) {
+        user.evernoteNotebook = req.body.evernoteNotebook;
+        user.save(function (err) {
+          if(err) {
+            console.error(err);
+          } else {
+            res.redirect('/account');
+          }
+        });
+      });
+    } else {
+      // todo
+    }
   });
 
   app.get('/login', function(req, res){
@@ -84,11 +112,5 @@ module.exports = function(app, User) {
         });
       });
     })(req, res, next);
-  });
-
-  app.post('/login', function(req, res, next) { passport.authenticate('local', function(err, user, info) {
-  //app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), function(req, res) {
-    res.redirect('/account');
-  })(req, res, next);
   });
 };

@@ -1,0 +1,16 @@
+<h1>Account</h1>
+<p>Username: {{user.username}}</p>
+<p>Email: {{user.email}}</p>
+{{#if user.evernoteToken}}
+  <p>Connect a Evernote notebook:</p>
+  <form action="/account" method="post">
+    <select name="evernoteNotebook">
+    {{#each notebooks}}
+      <option value="{{this.guid}}">{{this.name}}</option>
+    {{/each}}
+    </select>
+    <input class="button" type="submit" value="Save"/>
+  </form>
+{{else}}
+  <a href="/auth/evernote" class="button">Connect with Evernote.</a>
+{{/if}}
