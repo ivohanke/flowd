@@ -1,9 +1,11 @@
 var passport = require('passport'),
-    Evernote = require('evernote').Evernote;
+    Evernote = require('evernote').Evernote,
+    async = require('async'),
+    cheerio = require('cheerio');
 
 module.exports = function(app, User) {
 
-  app.get('/', function(req, res){
+  app.get('/', function(req, res, next){
     if(req.user && req.user.evernoteToken && req.user.evernoteNotebook) {
       var client = new Evernote.Client({
         token: req.user.evernoteToken,
@@ -12,7 +14,44 @@ module.exports = function(app, User) {
       var noteStore = client.getNoteStore();
       var noteFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteNotebook});
       noteStore.findNotes(req.user.evernoteToken, noteFilter, 0, 100, function(err, result) {
-        res.render('index', {user: req.user, notes: result.notes});
+        console.log(result);
+        if (err) {
+          console.error(err);
+          return next(err);
+        }
+        if (result.totalNotes > 0) {
+          var notes = result.notes;
+          var notesLibrary =  {
+            getContent: function(note, callback) {
+              noteStore.getNoteContent(req.user.evernoteToken, note.guid, function(err, content) {
+                var $ = cheerio.load(content);
+                note.content = $('en-note div').html();
+                callback(err, note);
+              });
+            },
+            getTags: function(note, callback) {
+              noteStore.getNoteTagNames(req.user.evernoteToken, note.guid, function(err, tags) {
+                note.tags = tags;
+                callback(err, note);
+              });
+            }
+          };
+          async.map(notes, notesLibrary.getContent, function(err, notesWithContent){
+            if (err) {
+              console.error(err);
+              return next(err);
+            }
+            async.map(notesWithContent, notesLibrary.getTags, function(err, notesWithContentAndTags){
+              if (err) {
+                console.error(err);
+                return next(err);
+              }
+              res.render('index', { user: req.user, notes: notesWithContentAndTags });
+            });
+          });
+
+        }
+
       });
     } else {
       res.render('index', { user: req.user });
@@ -29,14 +68,15 @@ module.exports = function(app, User) {
       newUser.save(function (err) {
         if (err) {
           console.error(err);
-        } else {
-          req.login(newUser, function (err) {
-            if (err) {
-              console.error(err);
-            }
-            res.redirect('/');
-          });
+          return next(err);
         }
+        req.login(newUser, function (err) {
+          if (err) {
+            console.error(err);
+            return next(err);
+          }
+          res.redirect('/');
+        });
       });
     } else {
       // todo
@@ -64,9 +104,9 @@ module.exports = function(app, User) {
         user.save(function (err) {
           if(err) {
             console.error(err);
-          } else {
-            res.redirect('/account');
+            return next(err);
           }
+          res.redirect('/account');
         });
       });
     } else {

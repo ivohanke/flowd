@@ -1,12 +1,15 @@
-<h1>Homepage</h1>
-<p>blah blah blah</p>
+<div class="small-12 columns">
+  <h1>Homepage</h1>
+  <p>blah blah blah</p>
+</div>
 {{#if user}}
-  <ul class="no-bullets">
+
   {{#each notes}}
-    <li>
+    <div class="small-4 columns left panel">
       <h3>{{this.title}}</h3>
-      <p>{{this.contentHash}}</p>
-    </li>
+      <small>{{this.tags}}</small>
+      <p>{{this.content}}</p>
+    </div>
   {{/each}}
-  </ul>
+
 {{/if}}

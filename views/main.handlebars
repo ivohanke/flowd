@@ -1,0 +1,68 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="stylesheets/app.css" />
+    <script src="bower_components/modernizr/modernizr.js"></script>
+  </head>
+  <body>
+    <div class="off-canvas-wrap">
+      <div class="inner-wrap">
+        <nav class="top-bar hide-for-small fixed contain-to-grid" data-topbar>
+          <ul class="title-area">
+            <li class="name">
+              <h1><a href="/">noteBoard</a></h1>
+            </li>
+          </ul>
+
+          <section class="top-bar-section">
+            <!-- Right Nav Section -->
+            <ul class="right">
+              {{#if !user}}
+                <li><a href="/login" class="">Login</a></li>
+                <li><a href="/signup" class="">Signup</a></li>
+              {{else}}
+                <li><a href="/account" class="">{{user.username}}</a></li>
+                <li><a href="/logout" class="">Logout</a></li>
+              {{/if}}
+            </ul>
+
+          </section>
+        </nav>
+
+        <nav class="tab-bar show-for-small">
+          <a class="left-off-canvas-toggle menu-icon" ><span>noteBoard</span></a>
+        </nav>
+
+        <aside class="left-off-canvas-menu">
+
+          <ul class="off-canvas-list">
+            <li class="first"><label>Menu</label></li>
+              {{#if !user}}
+                <li><a href="/login" class="">Login</a></li>
+                <li><a href="/signup" class="">Signup</a></li>
+              {{else}}
+                <li><a href="/account" class="">{{user.username}}</a></li>
+                <li><a href="/logout" class="">Logout</a></li>
+              {{/if}}
+          </ul>
+        </aside>
+
+        <div class="row">
+          <div class="small-12 columns">
+            {{{body}}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/foundation/js/foundation.min.js"></script>
+    <script src="bower_components/foundation/js/foundation/foundation.topbar.js"></script>
+    <script src="js/custom.js"></script>
+
+  </body>
+</html>
