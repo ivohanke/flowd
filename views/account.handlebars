@@ -1,16 +1,31 @@
-<h1>Account</h1>
-<p>Username: {{user.username}}</p>
-<p>Email: {{user.email}}</p>
-{{#if user.evernoteToken}}
-  <p>Connect a Evernote notebook:</p>
-  <form action="/account" method="post">
-    <select name="evernoteNotebook">
-    {{#each notebooks}}
-      <option value="{{this.guid}}">{{this.name}}</option>
-    {{/each}}
-    </select>
-    <input class="button" type="submit" value="Save"/>
-  </form>
-{{else}}
-  <a href="/auth/evernote" class="button">Connect with Evernote.</a>
-{{/if}}
+<div class="row">
+  <div class="small-12 columns">
+    <div class="small-12 medium-4 large-4 small-centered columns">
+      <form action="/account" method="post">
+        <h3>Account</h3>
+        <p>Username: {{user.username}}</p>
+        <p>Email: {{user.email}}</p>
+        <input class="button" type="submit" value="Edit"/>
+      </form>
+    </div>
+    <div class="small-12 medium-4 large-4 small-centered columns">
+      <h3>Connect a Evernote notebook:</h3>
+      {{#if user.evernoteToken}}
+        <form action="/account" method="post">
+          <select name="evernoteNotebook">
+          {{#each notebooks}}
+            {{!-- {{#if user.evernoteNotebook == this.guid}} --}}
+              {{!-- <option value="{{this.guid}}" selected>{{this.name}}</option> --}}
+            {{!-- {{else}} --}}
+              <option value="{{this.guid}}">{{this.name}}</option>
+            {{!-- {{/if}} --}}
+          {{/each}}
+          </select>
+          <input class="button" type="submit" value="Save"/>
+        </form>
+      {{else}}
+        <a href="/auth/evernote" class="button">Connect with Evernote.</a>
+      {{/if}}
+    </div>
+  </div>
+</div>

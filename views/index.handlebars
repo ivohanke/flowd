@@ -1,15 +1,26 @@
-<div class="small-12 columns">
-  <h1>Homepage</h1>
-  <p>blah blah blah</p>
+<div class="row">
+  <div class="small-12 columns note-board">
+    {{#if user}}
+      {{#if categories}}
+        {{#each categories}}
+          <div class="small-12 medium-3 large-3 columns note-column">
+            <h3>{{this.title}}</h3>
+            <div class="note-column-inner">
+              {{#each this.notes}}
+                <div class="small-12 note" data-id="{{this.guid}}" draggable="true">
+                  <h4 class="subheader">{{this.title}}</h4>
+                  <small>{{this.tags}}</small>
+                  <p>{{this.content}}</p>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        {{/each}}
+      {{else}}
+        <p>You have to connect your Evernote-Account to use noteBoard!</p>
+      {{/if}}
+    {{else}}
+      <p>Please <a href="/login">Login</a> or <a href="/signup">Signup</a> to use noteBoard.</p>
+    {{/if}}
+  </div>
 </div>
-{{#if user}}
-
-  {{#each notes}}
-    <div class="small-4 columns left panel">
-      <h3>{{this.title}}</h3>
-      <small>{{this.tags}}</small>
-      <p>{{this.content}}</p>
-    </div>
-  {{/each}}
-
-{{/if}}

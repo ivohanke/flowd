@@ -1,6 +1,15 @@
 @import "settings";
 @import "foundation";
 
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
 
 header {
   @include grid-row;
@@ -10,22 +19,40 @@ header {
 
 }
 
-
-.main-content {
-  @include grid-row;
-
-  aside  {
-    @include grid-column($columns:6);
-    // @media #{$medium-up} {
-    //   @include grid-column($columns:3);
-    // }
+.main{
+  margin: 40px 0;
+  .note-board {
+    @include grid-row;
+    position: relative;
+    .note-column{
+      .note-column-inner{
+        min-height: 600px;
+        padding: 2px;
+        background: darken($body-bg, 3%);
+        .note{
+          margin-bottom: 10px;
+          padding: 10px;
+          background: white;
+          //@include transition(all .5s);
+          h4{
+            margin: 0;
+            font-size: 16px;
+          }
+          small{
+            display: block;
+            margin: 10px 0;
+          }
+          p{
+            font-size: 10px;
+          }
+          &.lifted{
+            background: $secondary-color;
+          }
+        }
+        &.over{
+          background: darken($body-bg, 10%);
+        }
+      }
+    }
   }
-
-  article  {
-    @include grid-column($columns:6);
-    // @media #{$medium-up} {
-    //   @include grid-column($columns:8, $offset: 1);
-    // }
-  }
-
 }

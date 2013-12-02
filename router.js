@@ -14,7 +14,6 @@ module.exports = function(app, User) {
       var noteStore = client.getNoteStore();
       var noteFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteNotebook});
       noteStore.findNotes(req.user.evernoteToken, noteFilter, 0, 100, function(err, result) {
-        console.log(result);
         if (err) {
           console.error(err);
           return next(err);
@@ -25,7 +24,7 @@ module.exports = function(app, User) {
             getContent: function(note, callback) {
               noteStore.getNoteContent(req.user.evernoteToken, note.guid, function(err, content) {
                 var $ = cheerio.load(content);
-                note.content = $('en-note div').html();
+                note.content = $('en-note div').html().substring(0,200) + '...';
                 callback(err, note);
               });
             },
@@ -46,12 +45,41 @@ module.exports = function(app, User) {
                 console.error(err);
                 return next(err);
               }
-              res.render('index', { user: req.user, notes: notesWithContentAndTags });
+              function todoFilter(note) {
+                return note.tags.indexOf('todo') !== -1;
+              }
+              function inProgressFilter(note) {
+                return note.tags.indexOf('in progress') !== -1;
+              }
+              function testFilter(note) {
+                return note.tags.indexOf('test') !== -1;
+              }
+              function doneFilter(note) {
+                return note.tags.indexOf('done') !== -1;
+              }
+              var categories = {
+                todo: {
+                  title: 'Todo',
+                  notes: notesWithContentAndTags.filter(todoFilter)
+                },
+                in_progress: {
+                  title: 'In progress',
+                  notes: notesWithContentAndTags.filter(inProgressFilter)
+                },
+                test: {
+                  title: 'Test',
+                  notes: notesWithContentAndTags.filter(testFilter)
+                },
+                done: {
+                  title: 'Done',
+                  notes: notesWithContentAndTags.filter(doneFilter)
+                }
+              };
+              console.log(categories);
+              res.render('index', { user: req.user, categories: categories});
             });
           });
-
         }
-
       });
     } else {
       res.render('index', { user: req.user });
@@ -115,6 +143,7 @@ module.exports = function(app, User) {
   });
 
   app.get('/login', function(req, res){
+    console.log(req);
     res.render('login', { user: req.user, message: req.session.messages });
   });
 
@@ -152,5 +181,34 @@ module.exports = function(app, User) {
         });
       });
     })(req, res, next);
+  });
+
+app.get('/set/:note/:tag', function(req, res, next){
+    if(req.user && req.user.evernoteToken && req.user.evernoteNotebook) {
+      var client = new Evernote.Client({
+        token: req.user.evernoteToken,
+        sandbox: true
+      });
+      var noteStore = client.getNoteStore();
+      console.log(req.param('note'));
+      noteStore.listTags(req.user.evernoteToken, function(err, list) {
+        console.log(list);
+      });
+      noteStore.getNote(req.user.evernoteToken, req.param('note'), false, false, false, false, function(err, note){
+        if (err) {
+          console.error(err);
+          return next(err);
+        }
+        console.dir(note);
+        note.tagGuids = '';
+        noteStore.updateNote(req.user.evernoteToken, note, function(err, result){
+          if (err) {
+            console.error(err);
+            return next(err);
+          }
+          res.redirect('/account');
+        });
+      });
+    }
   });
 };
