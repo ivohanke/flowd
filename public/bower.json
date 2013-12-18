@@ -1,8 +1,20 @@
 {
-  "name": "foundation-compass-app",
-  "version": "0.0.1",
-  "private": "true",
+  "name": "noteBoard",
+  "version": "0.0.2",
   "dependencies": {
     "foundation": "zurb/bower-foundation"
-  }
+  },
+  "authors": [
+    "Ivo Hanke <mail@ivohanke.de>"
+  ],
+  "description": "Taskboard for Evernote",
+  "main": "app.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }

@@ -4,9 +4,8 @@
  */
 
 var express = require('express'),
-    exphbs  = require('express3-handlebars'),
-    routes = require('./routes'),
     http = require('http'),
+    exphbs  = require('express3-handlebars'),
     path = require('path'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
@@ -24,6 +23,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
   console.log('Connected to DB');
 });
+
 
 // User Schema
 var userSchema = mongoose.Schema({
@@ -124,9 +124,9 @@ passport.use(new EvernoteStrategy({
 ));
 
 
-
-
-var app = express();
+// Server
+var app = express(),
+    server = http.createServer(app);
 
 app.configure(function() {
   app.set('port', 3000);
@@ -150,8 +150,21 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+require('./routes');
 require('./router')(app, User);
 
-app.listen(app.get('port'), function(){
+server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
+});
+
+
+// Websockets
+var io = require("socket.io").listen(server);
+
+// io.set('loglevel',10);
+io.sockets.on('connection', function (socket) {
+  socket.on('dropElement', function (data) {
+    console.log('New tag/category' + data);
+    app.set('/set/' + data.guid + '/' + data.category);
+  });
 });

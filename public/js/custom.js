@@ -1,5 +1,7 @@
 // Foundation JavaScript
 // Documentation can be found at: http://foundation.zurb.com/docs
+var socket = io.connect('http://localhost:3000');
+
 $(document).foundation();
 
 $(document).ready(function() {
@@ -40,6 +42,7 @@ $(document).ready(function() {
       // Set the source column's HTML to the HTML of the column we dropped on.
       $(dragSrcEl).detach();
       $(this).prepend(dragSrcEl);
+      socket.emit('dropElement', {guid: $(dragSrcEl).data('id'), category: $('h3', $(this).parent()).html()});
     }
 
     return false;
@@ -62,4 +65,5 @@ $(document).ready(function() {
   });
   $('.note-column-inner').on('dragover', handleDragOver);
   $('.note-column-inner').on('drop', handleDrop);
+
 });
