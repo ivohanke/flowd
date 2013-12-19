@@ -16,8 +16,10 @@ var express = require('express'),
     SALT_WORK_FACTOR = 10;
 
 // Database
-mongoose.connect('localhost', 'test');
-var db = mongoose.connection;
+var mongoUri = process.env.MONGOLAB_URI ||
+    process.env.MONGOHQ_URL ||
+    'mongodb://localhost/mydb',
+    db = mongoose.connect(db_url);
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback() {
