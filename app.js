@@ -119,7 +119,7 @@ passport.use(new EvernoteStrategy({
     userAuthorizationURL: 'https://sandbox.evernote.com/OAuth.action',
     consumerKey: 'ivohanke-5271',
     consumerSecret: '17d4bc3c8a32d092',
-    callbackURL: "http://localhost:3000/auth/evernote/callback"
+    callbackURL: "http://flowd.herokuapp.com/auth/evernote/callback"
   },
   function(token, tokenSecret, profile, done) {
     process.nextTick(function () {
