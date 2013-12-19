@@ -27,9 +27,9 @@ db.once('open', function callback() {
 
 // User Schema
 var userSchema = mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true},
+  username: {type: String, required: true, unique: true},
+  email: {type: String, required: true, unique: true},
+  password: {type: String, required: true},
   evernoteToken: {type: String, required: false},
   evernoteNotebook: {type: String, required: false}
 });
