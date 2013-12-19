@@ -7725,43 +7725,21 @@ th.hide-for-touch {
 }
 
 /* line 14, ../scss/app.scss */
-header {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 0;
-  margin-bottom: 0;
-  max-width: 62.5rem;
-  *zoom: 1;
-  padding-bottom: 0.625rem;
+.top-bar {
+  margin-bottom: 30px;
 }
-/* line 165, ../bower_components/foundation/scss/foundation/components/_global.scss */
-header:before, header:after {
-  content: " ";
-  display: table;
+/* line 16, ../scss/app.scss */
+.top-bar h1 {
+  display: inline-block;
 }
-/* line 166, ../bower_components/foundation/scss/foundation/components/_global.scss */
-header:after {
-  clear: both;
-}
-/* line 17, ../scss/app.scss */
-header .logo {
-  position: relative;
-  padding-left: 0.9375rem;
-  padding-right: 0.9375rem;
-  width: 25%;
-  margin-left: auto;
-  margin-right: auto;
-  float: none !important;
-  float: left;
+/* line 18, ../scss/app.scss */
+.top-bar h1 span {
+  color: grey;
 }
 
-/* line 22, ../scss/app.scss */
+/* line 24, ../scss/app.scss */
 .main {
   margin: 40px 0;
-}
-/* line 24, ../scss/app.scss */
-.main .note-board {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -7772,45 +7750,45 @@ header .logo {
   position: relative;
 }
 /* line 165, ../bower_components/foundation/scss/foundation/components/_global.scss */
-.main .note-board:before, .main .note-board:after {
+.main:before, .main:after {
   content: " ";
   display: table;
 }
 /* line 166, ../bower_components/foundation/scss/foundation/components/_global.scss */
-.main .note-board:after {
+.main:after {
   clear: both;
 }
-/* line 28, ../scss/app.scss */
-.main .note-board .note-column .note-column-inner {
+/* line 29, ../scss/app.scss */
+.main .note-column .note-column-inner {
   min-height: 600px;
   padding: 2px;
   background: #ebebeb;
 }
-/* line 32, ../scss/app.scss */
-.main .note-board .note-column .note-column-inner .note {
+/* line 33, ../scss/app.scss */
+.main .note-column .note-column-inner .note {
   margin-bottom: 10px;
   padding: 10px;
   background: white;
 }
-/* line 37, ../scss/app.scss */
-.main .note-board .note-column .note-column-inner .note h4 {
+/* line 38, ../scss/app.scss */
+.main .note-column .note-column-inner .note h4 {
   margin: 0;
   font-size: 16px;
 }
-/* line 41, ../scss/app.scss */
-.main .note-board .note-column .note-column-inner .note small {
+/* line 42, ../scss/app.scss */
+.main .note-column .note-column-inner .note small {
   display: block;
   margin: 10px 0;
 }
-/* line 45, ../scss/app.scss */
-.main .note-board .note-column .note-column-inner .note p {
+/* line 46, ../scss/app.scss */
+.main .note-column .note-column-inner .note p {
   font-size: 10px;
 }
-/* line 48, ../scss/app.scss */
-.main .note-board .note-column .note-column-inner .note.lifted {
+/* line 49, ../scss/app.scss */
+.main .note-column .note-column-inner .note.lifted {
   background: #e7e7e7;
 }
-/* line 52, ../scss/app.scss */
-.main .note-board .note-column .note-column-inner.over {
+/* line 53, ../scss/app.scss */
+.main .note-column .note-column-inner.over {
   background: #d9d9d9;
 }
