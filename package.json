@@ -31,7 +31,7 @@
   },
   "bugs": {
     "url": "https://github.com/ivohanke/flowd/issues"
-  }
+  },
   "engines": {
     "node": "0.10.x"
   }
