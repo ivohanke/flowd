@@ -134,7 +134,7 @@ var app = express(),
     server = http.createServer(app);
 
 app.configure(function() {
-  app.set('port', 3000);
+  app.set('port', process.env.PORT || 5000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   app.engine('handlebars', exphbs({defaultLayout: 'main'}));
