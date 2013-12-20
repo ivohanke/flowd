@@ -9,16 +9,47 @@
       </form>
     </div>
     <div class="small-12 medium-4 large-4 small-centered columns">
-      <h3>Connect a Evernote notebook:</h3>
+      <h3>Configure your notebooks:</h3>
       {{#if user.evernoteToken}}
         <form action="/account" method="post">
-          <select name="evernoteNotebook">
+          <label for="evernoteTodoNotebook">ToDo Notebook</label>
+          <select name="evernoteTodoNotebook">
           {{#each notebooks}}
-            {{!-- {{#if user.evernoteNotebook == this.guid}} --}}
-              {{!-- <option value="{{this.guid}}" selected>{{this.name}}</option> --}}
-            {{!-- {{else}} --}}
+            {{#compare ../user.evernoteTodoNotebook "==" this.guid}}
+              <option value="{{this.guid}}" selected>{{this.name}}</option>
+            {{else}}
               <option value="{{this.guid}}">{{this.name}}</option>
-            {{!-- {{/if}} --}}
+            {{/compare}}
+          {{/each}}
+          </select>
+          <label for="evernoteInProgressNotebook">In Progress Notebook</label>
+          <select name="evernoteInProgressNotebook">
+          {{#each notebooks}}
+            {{#compare ../user.evernoteInProgressNotebook "==" this.guid}}
+              <option value="{{this.guid}}" selected>{{this.name}}</option>
+            {{else}}
+              <option value="{{this.guid}}">{{this.name}}</option>
+            {{/compare}}
+          {{/each}}
+          </select>
+          <label for="evernoteTestNotebook">Test Notebook</label>
+          <select name="evernoteTestNotebook">
+          {{#each notebooks}}
+            {{#compare ../user.evernoteTestNotebook "==" this.guid}}
+              <option value="{{this.guid}}" selected>{{this.name}}</option>
+            {{else}}
+              <option value="{{this.guid}}">{{this.name}}</option>
+            {{/compare}}
+          {{/each}}
+          </select>
+          <label for="evernoteDoneNotebook">Done Notebook</label>
+          <select name="evernoteDoneNotebook">
+          {{#each notebooks}}
+            {{#compare ../user.evernoteDoneNotebook "==" this.guid}}
+              <option value="{{this.guid}}" selected>{{this.name}}</option>
+            {{else}}
+              <option value="{{this.guid}}">{{this.name}}</option>
+            {{/compare}}
           {{/each}}
           </select>
           <input class="button" type="submit" value="Save"/>

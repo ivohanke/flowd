@@ -6,14 +6,10 @@ var passport = require('passport'),
 module.exports = function(app, User) {
 
   app.get('/', function(req, res, next){
-    if(req.user && req.user.evernoteToken && req.user.evernoteNotebook) {
-      var client = new Evernote.Client({
-        token: req.user.evernoteToken,
-        sandbox: true
-      });
-      var noteStore = client.getNoteStore();
-      var noteFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteNotebook});
-      noteStore.findNotes(req.user.evernoteToken, noteFilter, 0, 100, function(err, result) {
+
+    // Function to
+    function getNotes(token, noteStore, noteFilter, callback) {
+      noteStore.findNotes(token, noteFilter, 0, 100, function(err, result) {
         if (err) {
           console.error(err);
           return next(err);
@@ -45,44 +41,74 @@ module.exports = function(app, User) {
                 console.error(err);
                 return next(err);
               }
-              function todoFilter(note) {
-                return note.tags.indexOf('todo') !== -1;
-              }
-              function inProgressFilter(note) {
-                return note.tags.indexOf('in progress') !== -1;
-              }
-              function testFilter(note) {
-                return note.tags.indexOf('test') !== -1;
-              }
-              function doneFilter(note) {
-                return note.tags.indexOf('done') !== -1;
-              }
-              var categories = {
-                todo: {
-                  title: 'Todo',
-                  notes: notesWithContentAndTags.filter(todoFilter)
-                },
-                in_progress: {
-                  title: 'In progress',
-                  notes: notesWithContentAndTags.filter(inProgressFilter)
-                },
-                test: {
-                  title: 'Test',
-                  notes: notesWithContentAndTags.filter(testFilter)
-                },
-                done: {
-                  title: 'Done',
-                  notes: notesWithContentAndTags.filter(doneFilter)
-                }
-              };
-              console.log(categories);
-              res.render('index', { user: req.user, categories: categories});
+              callback(null, notesWithContentAndTags);
             });
           });
+        } else {
+          callback(null, {});
         }
       });
+    }
+
+    if(req.user && req.user.evernoteToken) {
+
+      var client = new Evernote.Client({
+            token: req.user.evernoteToken,
+            sandbox: true
+          }),
+          board = {};
+
+      async.parallel([
+        function(callback) {
+          var todoFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteTodoNotebook}),
+              obj = {};
+          getNotes(req.user.evernoteToken, client.getNoteStore(), todoFilter, function(err, result) {
+            obj = {
+              title: 'Todo',
+              content: result
+            };
+            callback(null, obj);
+          });
+        },
+        function(callback) {
+          var inProgressFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteInProgressNotebook}),
+              obj = {};
+          getNotes(req.user.evernoteToken, client.getNoteStore(), inProgressFilter, function(err, result) {
+            obj = {
+              title: 'In Progress',
+              content: result
+            };
+            callback(null, obj);
+          });
+        },
+        function(callback) {
+          var testFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteTestNotebook}),
+              obj = {};
+          getNotes(req.user.evernoteToken, client.getNoteStore(), testFilter, function(err, result) {
+            obj = {
+              title: 'Test',
+              content: result
+            };
+            callback(null, obj);
+          });
+        },
+        function(callback) {
+          var doneFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteDoneNotebook}),
+              obj = {};
+          getNotes(req.user.evernoteToken, client.getNoteStore(), doneFilter, function(err, result) {
+            var obj = {
+              title: 'Done',
+              content: result
+            };
+            callback(null, obj);
+          });
+        },
+      ], function(err, results) {
+        res.render('index', {user: req.user, board: results});
+      });
+
     } else {
-      res.render('index', { user: req.user });
+      res.render('index', {user: req.user});
     }
   });
 
@@ -125,10 +151,14 @@ module.exports = function(app, User) {
       res.render('account', { user: req.user });
     }
   });
-    app.post('/account', function(req, res, next){
-    if (req.body.evernoteNotebook) {
+  app.post('/account', function(req, res, next){
+    console.dir(req);
+    //if (req.body.evernoteTodoNotebook && req.body.evernoteInProgressNotebook && req.body.evernoteTestNotebook && req.body.evernoteDoneNotebook) {
       User.findOne({username: req.user.username}, function (err, user) {
-        user.evernoteNotebook = req.body.evernoteNotebook;
+        user.evernoteTodoNotebook = req.body.evernoteTodoNotebook;
+        user.evernoteInProgressNotebook = req.body.evernoteInProgressNotebook;
+        user.evernoteTestNotebook = req.body.evernoteTestNotebook;
+        user.evernoteDoneNotebook = req.body.evernoteDoneNotebook;
         user.save(function (err) {
           if(err) {
             console.error(err);
@@ -137,9 +167,9 @@ module.exports = function(app, User) {
           res.redirect('/account');
         });
       });
-    } else {
+    //} else{
       // todo
-    }
+    // }
   });
 
   app.get('/login', function(req, res){
@@ -184,13 +214,12 @@ module.exports = function(app, User) {
   });
 
 app.get('/set/:note/:tag', function(req, res, next){
-    if(req.user && req.user.evernoteToken && req.user.evernoteNotebook) {
+    if(req.user && req.user.evernoteToken) {
       var client = new Evernote.Client({
         token: req.user.evernoteToken,
         sandbox: true
       });
       var noteStore = client.getNoteStore();
-      console.log(req.param('note'));
       noteStore.listTags(req.user.evernoteToken, function(err, list) {
         console.log(list);
       });
@@ -199,7 +228,6 @@ app.get('/set/:note/:tag', function(req, res, next){
           console.error(err);
           return next(err);
         }
-        console.dir(note);
         note.tagGuids = '';
         noteStore.updateNote(req.user.evernoteToken, note, function(err, result){
           if (err) {

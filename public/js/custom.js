@@ -1,6 +1,6 @@
 // Foundation JavaScript
 // Documentation can be found at: http://foundation.zurb.com/docs
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect('http://localhost:5000');
 
 $(document).foundation();
 

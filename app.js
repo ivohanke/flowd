@@ -13,9 +13,12 @@ var express = require('express'),
     mongodb = require('mongodb'),
     mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
-    SALT_WORK_FACTOR = 10;
+    $ = require('jquery'),
+    SALT_WORK_FACTOR = 10,
+    hbs;
 
-// Database
+
+// Database connection
 var mongoUri = process.env.MONGOLAB_URI ||
     process.env.MONGOHQ_URL ||
     'mongodb://localhost/mydb',
@@ -29,14 +32,16 @@ db.once('open', function callback() {
   console.log('Connected to DB');
 });
 
-
 // User Schema
 var userSchema = mongoose.Schema({
   username: {type: String, required: true, unique: true},
   email: {type: String, required: true, unique: true},
   password: {type: String, required: true},
   evernoteToken: {type: String, required: false},
-  evernoteNotebook: {type: String, required: false}
+  evernoteTodoNotebook: {type: String, required: false},
+  evernoteInProgressNotebook: {type: String, required: false},
+  evernoteTestNotebook: {type: String, required: false},
+  evernoteDoneNotebook: {type: String, required: false},
 });
 
 // Bcrypt middleware
@@ -62,6 +67,7 @@ userSchema.pre('save', function(next) {
   });
 });
 
+
 // Password verification
 userSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
@@ -72,8 +78,10 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
   });
 };
 
-// Create user
+
+// Create user from schema
 var User = mongoose.model('User', userSchema);
+
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {
@@ -105,7 +113,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
       if(isMatch) {
         return done(null, user);
       } else {
-        return done(null, false, { message: 'Invalid password' });
+        return done(null, false, {message: 'Invalid password'});
       }
     });
   });
@@ -119,7 +127,7 @@ passport.use(new EvernoteStrategy({
     userAuthorizationURL: 'https://sandbox.evernote.com/OAuth.action',
     consumerKey: 'ivohanke-5271',
     consumerSecret: '17d4bc3c8a32d092',
-    callbackURL: "http://flowd.herokuapp.com/auth/evernote/callback"
+    callbackURL: "/auth/evernote/callback"
   },
   function(token, tokenSecret, profile, done) {
     process.nextTick(function () {
@@ -129,15 +137,62 @@ passport.use(new EvernoteStrategy({
 ));
 
 
+// Compare helper for Handelbars
+hbs = exphbs.create({
+  layoutsDir:'views/layouts/',
+  partialsDir:'views/partials/',
+  defaultLayout: 'main',
+  extname:'.handlebars',
+  helpers: {
+    compare: function (lvalue, operator, rvalue, options) {
+
+      var operators, result;
+
+      if (arguments.length < 3) {
+        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+      }
+
+      if (options === undefined) {
+        options = rvalue;
+        rvalue = operator;
+        operator = "===";
+      }
+
+      operators = {
+        '==': function (l, r) { return l == r; },
+        '===': function (l, r) { return l === r; },
+        '!=': function (l, r) { return l != r; },
+        '!==': function (l, r) { return l !== r; },
+        '<': function (l, r) { return l < r; },
+        '>': function (l, r) { return l > r; },
+        '<=': function (l, r) { return l <= r; },
+        '>=': function (l, r) { return l >= r; },
+        'typeof': function (l, r) { return typeof l == r; }
+      };
+
+      if (!operators[operator]) {
+        throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
+      }
+
+      result = operators[operator](lvalue, rvalue);
+
+      if (result) {
+        return options.fn(this);
+      } else {
+        return options.inverse(this);
+      }
+    }
+  }
+});
+
+
 // Server
 var app = express(),
     server = http.createServer(app);
 
 app.configure(function() {
   app.set('port', process.env.PORT || 5000);
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
-  app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+  app.engine('handlebars', hbs.engine);
   app.set('view engine', 'handlebars');
   app.locals.pretty = true;
   app.use(express.logger());
@@ -169,7 +224,14 @@ var io = require("socket.io").listen(server);
 // io.set('loglevel',10);
 io.sockets.on('connection', function (socket) {
   socket.on('dropElement', function (data) {
-    console.log('New tag/category' + data);
-    app.set('/set/' + data.guid + '/' + data.category);
+    console.dir(data);
+    console.log('/set/' + data.guid + '/' + data.category);
+    $.ajax({
+      url: '/set/' + data.guid + '/' + data.category,
+      success: function(data) {
+        console.log('success');
+        console.dir(data);
+      }
+    });
   });
 });
