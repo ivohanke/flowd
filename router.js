@@ -200,7 +200,7 @@ module.exports = function(app, User) {
   });
 
   app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), function(req, res) {
-    res.redirect('/');
+    res.redirect('/account');
   });
 
 
