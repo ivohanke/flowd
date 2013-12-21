@@ -5,6 +5,8 @@ var passport = require('passport'),
 
 module.exports = function(app, User) {
 
+
+  // Index routes
   app.get('/', function(req, res, next){
 
     // Function to
@@ -104,7 +106,7 @@ module.exports = function(app, User) {
           });
         },
       ], function(err, results) {
-        res.render('index', {user: req.user, board: results});
+        res.render('index', { user: req.user, board: results });
       });
 
     } else {
@@ -112,6 +114,8 @@ module.exports = function(app, User) {
     }
   });
 
+
+  // Signup routes
   app.get('/signup', function(req, res){
     res.render('signup');
   });
@@ -133,7 +137,7 @@ module.exports = function(app, User) {
         });
       });
     } else {
-      // todo
+      res.redirect('/signup', { user: req.user, message: req.session.messages });
     }
   });
 
@@ -151,27 +155,45 @@ module.exports = function(app, User) {
       res.render('account', { user: req.user });
     }
   });
-  app.post('/account', function(req, res, next){
-    console.dir(req);
-    //if (req.body.evernoteTodoNotebook && req.body.evernoteInProgressNotebook && req.body.evernoteTestNotebook && req.body.evernoteDoneNotebook) {
+
+  app.post('/account/:action', function(req, res, next){
+    if (req.param('action') == 'config') {
+      if (req.body.evernoteTodoNotebook && req.body.evernoteInProgressNotebook && req.body.evernoteTestNotebook && req.body.evernoteDoneNotebook) {
+        User.findOne({username: req.user.username}, function (err, user) {
+          user.evernoteTodoNotebook = req.body.evernoteTodoNotebook;
+          user.evernoteInProgressNotebook = req.body.evernoteInProgressNotebook;
+          user.evernoteTestNotebook = req.body.evernoteTestNotebook;
+          user.evernoteDoneNotebook = req.body.evernoteDoneNotebook;
+          user.save(function (err) {
+            if(err) {
+              console.error(err);
+              return next(err);
+            }
+            res.redirect('/account');
+          });
+        });
+      } else {
+        res.redirect('/account'); //, { user: req.user, message: req.session.messages });
+      }
+    } else if (req.param('action') == 'delete') {
+
+      // Todo: confirmation
       User.findOne({username: req.user.username}, function (err, user) {
-        user.evernoteTodoNotebook = req.body.evernoteTodoNotebook;
-        user.evernoteInProgressNotebook = req.body.evernoteInProgressNotebook;
-        user.evernoteTestNotebook = req.body.evernoteTestNotebook;
-        user.evernoteDoneNotebook = req.body.evernoteDoneNotebook;
-        user.save(function (err) {
+        user.remove(function (err) {
           if(err) {
             console.error(err);
             return next(err);
           }
-          res.redirect('/account');
+          res.redirect('/');
         });
       });
-    //} else{
-      // todo
-    // }
+    } else {
+      res.redirect('/account'); //, { user: req.user, message: req.session.messages });
+    }
   });
 
+
+  // Login routes
   app.get('/login', function(req, res){
     console.log(req);
     res.render('login', { user: req.user, message: req.session.messages });
@@ -181,6 +203,8 @@ module.exports = function(app, User) {
     res.redirect('/');
   });
 
+
+  // Logout routes
   app.get('/logout', function(req, res){
     req.logout();
     res.redirect('/');
@@ -193,6 +217,9 @@ module.exports = function(app, User) {
     res.redirect('/login');
   }
 
+
+
+  // Evernote routes
   app.get('/auth/evernote', passport.authenticate('evernote'), function(req, res){
     // The request will be redirected to Evernote for authentication, so this
     // function will not be called.
@@ -213,7 +240,9 @@ module.exports = function(app, User) {
     })(req, res, next);
   });
 
-app.get('/set/:note/:tag', function(req, res, next){
+
+  // Webhook routes
+  app.get('/set/:note/:tag', function(req, res, next){
     if(req.user && req.user.evernoteToken) {
       var client = new Evernote.Client({
         token: req.user.evernoteToken,

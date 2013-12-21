@@ -120,7 +120,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
 }));
 
 
-// Evernote Authentication
+// Evernote app configuration
 passport.use(new EvernoteStrategy({
     requestTokenURL: 'https://sandbox.evernote.com/oauth',
     accessTokenURL: 'https://sandbox.evernote.com/oauth',
@@ -224,7 +224,6 @@ var io = require("socket.io").listen(server);
 // io.set('loglevel',10);
 io.sockets.on('connection', function (socket) {
   socket.on('dropElement', function (data) {
-    console.dir(data);
     console.log('/set/' + data.guid + '/' + data.category);
     $.ajax({
       url: '/set/' + data.guid + '/' + data.category,

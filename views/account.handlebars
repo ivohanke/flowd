@@ -1,17 +1,30 @@
 <div class="row">
   <div class="small-12 columns">
-    <div class="small-12 medium-4 large-4 small-centered columns">
+    <div class="small-12 medium-6 large-6 columns">
+      {{#if message}}
+        {{message}}
+      {{/if}}
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="small-12 columns">
+    <div class="small-12 medium-6 large-6 columns">
+      <h3>Account</h3>
+    </div>
+    <div class="small-12 medium-6 large-6 columns">
       <form action="/account" method="post">
-        <h3>Account</h3>
         <p>Username: {{user.username}}</p>
         <p>Email: {{user.email}}</p>
         <input class="button" type="submit" value="Edit"/>
       </form>
     </div>
-    <div class="small-12 medium-4 large-4 small-centered columns">
-      <h3>Configure your notebooks:</h3>
+    <div class="small-12 medium-6 large-6 columns">
+      <h3>Evernote configuration</h3>
+    </div>
+    <div class="small-12 medium-6 large-6 columns">
       {{#if user.evernoteToken}}
-        <form action="/account" method="post">
+        <form action="/account/config" method="post">
           <label for="evernoteTodoNotebook">ToDo Notebook</label>
           <select name="evernoteTodoNotebook">
           {{#each notebooks}}
@@ -57,6 +70,15 @@
       {{else}}
         <a href="/auth/evernote" class="button">Connect with Evernote.</a>
       {{/if}}
+    </div>
+    <div class="small-12 medium-6 large-6 columns">
+      <h3>Danger area</h3>
+    </div>
+    <div class="small-12 medium-6 large-6 columns">
+      <p>You can permanently delete your account here. Warning: This can't be undone!</p>
+      <form action="/account/delete" method="post">
+        <input class="button" type="submit" value="Delete Account"/>
+      </form>
     </div>
   </div>
 </div>
