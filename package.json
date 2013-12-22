@@ -1,7 +1,7 @@
 {
   "name": "flowd",
   "version": "0.0.2",
-  "description": "Scrum driven project management for Evernote",
+  "description": "Scrum based project management for Evernote",
   "main": "app.js",
   "dependencies": {
     "async": "~0.2.9",
@@ -15,7 +15,6 @@
     "passport": "~0.1.17",
     "passport-evernote": "~0.1.1",
     "passport-local": "~0.1.6",
-    "redis": "~0.9.0",
     "request": "~2.27.0",
     "socket.io": "~0.9.16",
     "url": "~0.7.9",

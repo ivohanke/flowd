@@ -3,7 +3,7 @@ var passport = require('passport'),
     async = require('async'),
     cheerio = require('cheerio');
 
-module.exports = function(app, User) {
+module.exports = function(app, User, io) {
 
 
   // Index routes
@@ -52,21 +52,46 @@ module.exports = function(app, User) {
       });
     }
 
+    // Update note
+    function updateNotebook(note, notebook, token, noteStore, callback) {
+      async.waterfall([
+        function(callback) {
+          noteStore.getNote(token, note, false, false, false, false, function(err, result) {
+            callback(null, result);
+          });
+        },
+        function(note, callback) {
+          var updatedNote = note;
+          console.dir(note);
+          updatedNote.notebookGuid = notebook; // update notebook guid
+          console.dir(updatedNote);
+          noteStore.updateNote(token, updatedNote, function(err, result) {
+            callback(null, result);
+          });
+        }
+      ], function(err, result) {
+        console.log('################## Success #################');
+      });
+    }
+
     if(req.user && req.user.evernoteToken) {
 
-      var client = new Evernote.Client({
-            token: req.user.evernoteToken,
+      var token = req.user.evernoteToken,
+          client = new Evernote.Client({
+            token: token,
             sandbox: true
           }),
+          noteStore = client.getNoteStore(),
           board = {};
 
       async.parallel([
         function(callback) {
           var todoFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteTodoNotebook}),
               obj = {};
-          getNotes(req.user.evernoteToken, client.getNoteStore(), todoFilter, function(err, result) {
+          getNotes(token, noteStore, todoFilter, function(err, result) {
             obj = {
               title: 'Todo',
+              guid: req.user.evernoteTodoNotebook,
               content: result
             };
             callback(null, obj);
@@ -75,9 +100,10 @@ module.exports = function(app, User) {
         function(callback) {
           var inProgressFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteInProgressNotebook}),
               obj = {};
-          getNotes(req.user.evernoteToken, client.getNoteStore(), inProgressFilter, function(err, result) {
+          getNotes(token, noteStore, inProgressFilter, function(err, result) {
             obj = {
               title: 'In Progress',
+              guid: req.user.evernoteInProgressNotebook,
               content: result
             };
             callback(null, obj);
@@ -86,9 +112,10 @@ module.exports = function(app, User) {
         function(callback) {
           var testFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteTestNotebook}),
               obj = {};
-          getNotes(req.user.evernoteToken, client.getNoteStore(), testFilter, function(err, result) {
+          getNotes(token, noteStore, testFilter, function(err, result) {
             obj = {
               title: 'Test',
+              guid: req.user.evernoteTestNotebook,
               content: result
             };
             callback(null, obj);
@@ -97,9 +124,10 @@ module.exports = function(app, User) {
         function(callback) {
           var doneFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteDoneNotebook}),
               obj = {};
-          getNotes(req.user.evernoteToken, client.getNoteStore(), doneFilter, function(err, result) {
+          getNotes(token, noteStore, doneFilter, function(err, result) {
             var obj = {
               title: 'Done',
+              guid: req.user.evernoteDoneNotebook,
               content: result
             };
             callback(null, obj);
@@ -109,9 +137,19 @@ module.exports = function(app, User) {
         res.render('index', { user: req.user, board: results });
       });
 
+      // Sockets
+      io.sockets.on('connection', function (socket) {
+        socket.on('dropElement', function (data) {
+          updateNotebook(data.noteGuid, data.notebookGuid, token, noteStore, function() {
+            socket.emit('dropElementSuccess', {result: 'success' });
+          });
+        });
+      });
+
     } else {
       res.render('index', {user: req.user});
     }
+
   });
 
 
@@ -242,7 +280,7 @@ module.exports = function(app, User) {
 
 
   // Webhook routes
-  app.get('/set/:note/:tag', function(req, res, next){
+  app.get('/set/:note/:notebook', function(req, res, next){
     if(req.user && req.user.evernoteToken) {
       var client = new Evernote.Client({
         token: req.user.evernoteToken,

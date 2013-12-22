@@ -3,13 +3,15 @@
     {{#if user}}
       {{#if board}}
         {{#each board}}
-          <div class="small-12 medium-3 large-3 columns note-column">
+          <div class="small-12 medium-3 large-3 columns note-column" data-guid="{{this.guid}}">
             <h3>{{this.title}}</h3>
             <div class="note-column-inner">
               {{#each this.content}}
-                <div class="small-12 note" data-id="{{this.guid}}" draggable="true">
+                <div class="small-12 note" data-guid="{{this.guid}}" draggable="true">
                   <h4 class="subheader">{{this.title}}</h4>
-                  <small>{{this.tags}}</small>
+                  {{#if tags }}
+                    <small>Tags: {{this.tags}}</small>
+                  {{/if}}
                   <p>{{this.content}}</p>
                 </div>
               {{/each}}

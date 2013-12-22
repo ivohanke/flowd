@@ -42,7 +42,8 @@ $(document).ready(function() {
       // Set the source column's HTML to the HTML of the column we dropped on.
       $(dragSrcEl).detach();
       $(this).prepend(dragSrcEl);
-      socket.emit('dropElement', {guid: $(dragSrcEl).data('id'), category: $('h3', $(this).parent()).html()});
+      console.dir(this);
+      socket.emit('dropElement', {noteGuid: $(dragSrcEl).data('guid'), notebookGuid: $(this).parent().data('guid')});
     }
 
     return false;
@@ -65,5 +66,7 @@ $(document).ready(function() {
   });
   $('.note-column-inner').on('dragover', handleDragOver);
   $('.note-column-inner').on('drop', handleDrop);
-
+  socket.on('dropElementSuccess', function() {
+    // Todo: user feedback;
+  });
 });

@@ -210,27 +210,15 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-require('./routes');
-require('./router')(app, User);
-
 server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
 
+
 // Websockets
 var io = require("socket.io").listen(server);
 
-// io.set('loglevel',10);
-io.sockets.on('connection', function (socket) {
-  socket.on('dropElement', function (data) {
-    console.log('/set/' + data.guid + '/' + data.category);
-    $.ajax({
-      url: '/set/' + data.guid + '/' + data.category,
-      success: function(data) {
-        console.log('success');
-        console.dir(data);
-      }
-    });
-  });
-});
+
+// Router
+require('./router')(app, User, io);
