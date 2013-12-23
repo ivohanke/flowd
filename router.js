@@ -68,15 +68,13 @@ module.exports = function(app, User, io) {
         },
         function(note, callback) {
           var updatedNote = note;
-          console.dir(note);
           updatedNote.notebookGuid = notebook; // update notebook guid
-          console.dir(updatedNote);
           noteStore.updateNote(token, updatedNote, function(err, result) {
             callback(null, result);
           });
         }
       ], function(err, result) {
-        console.log('################## Success #################');
+        // Successfully updated
       });
     }
 
@@ -239,7 +237,6 @@ module.exports = function(app, User, io) {
 
   // Login routes
   app.get('/login', function(req, res){
-    console.log(req);
     res.render('login', { user: req.user, message: req.session.messages });
   });
 
@@ -278,30 +275,56 @@ module.exports = function(app, User, io) {
 
 
   // Webhook routes
-  app.get('/set/:note/:notebook', function(req, res, next){
+//   app.get('/set/:note/:notebook', function(req, res, next){
+//     if(req.user && req.user.evernoteToken) {
+//       var client = new Evernote.Client({
+//         token: req.user.evernoteToken,
+//         sandbox: true
+//       });
+//       var noteStore = client.getNoteStore();
+//       noteStore.listTags(req.user.evernoteToken, function(err, list) {
+//         console.log(list);
+//       });
+//       noteStore.getNote(req.user.evernoteToken, req.param('note'), false, false, false, false, function(err, note){
+//         if (err) {
+//           console.error(err);
+//           return next(err);
+//         }
+//         note.tagGuids = '';
+//         noteStore.updateNote(req.user.evernoteToken, note, function(err, result){
+//           if (err) {
+//             console.error(err);
+//             return next(err);
+//           }
+//           res.redirect('/account');
+//         });
+//       });
+//     }
+//   });
+// };
+
+  // Edit node/partial
+  app.get('/note/:note', function(req, res, next){
     if(req.user && req.user.evernoteToken) {
       var client = new Evernote.Client({
-        token: req.user.evernoteToken,
-        sandbox: true
-      });
-      var noteStore = client.getNoteStore();
-      noteStore.listTags(req.user.evernoteToken, function(err, list) {
-        console.log(list);
-      });
-      noteStore.getNote(req.user.evernoteToken, req.param('note'), false, false, false, false, function(err, note){
+            token: req.user.evernoteToken,
+            sandbox: true
+          }),
+          noteStore = client.getNoteStore();
+
+      // Get note with content
+      noteStore.getNote(req.user.evernoteToken, req.param('note'), true, false, false, false, function(err, note){
         if (err) {
           console.error(err);
           return next(err);
         }
-        note.tagGuids = '';
-        noteStore.updateNote(req.user.evernoteToken, note, function(err, result){
-          if (err) {
-            console.error(err);
-            return next(err);
-          }
-          res.redirect('/account');
-        });
+        // var $ = cheerio.load(note.content);
+        // $('en-note div').html()
+        res.render('note', { user: req.user, note: note, layout: 'note'});
       });
+
+    } else {
+      res.redirect('/login');
     }
   });
 };

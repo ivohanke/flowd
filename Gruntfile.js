@@ -8,7 +8,17 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-          //'public/bootstrap/js/*.js',
+          'public/bootstrap/js/affix.js',
+          'public/bootstrap/js/alert.js',
+          'public/bootstrap/js/button.js',
+          'public/bootstrap/js/carousel.js',
+          'public/bootstrap/js/dropdown.js',
+          'public/bootstrap/js/modal.js',
+          'public/bootstrap/js/tooltip.js',
+          'public/bootstrap/js/popover.js',
+          'public/bootstrap/js/scrollspy.js',
+          'public/bootstrap/js/tab.js',
+          'public/bootstrap/js/transition.js',
           'public/js/custom.js'
         ],
         dest: 'public/js/scripts.min.js'

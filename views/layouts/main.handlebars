@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Homepage</title>
+    <title>Flowd</title>
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
@@ -30,8 +30,8 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
           {{#if user}}
-            <li><a href="/account" class="">{{user.username}}</a></li>
-            <li><a href="/logout" class="">Logout</a></li>
+            <li><a href="/account" class=""><i class="fa fa-dashboard fa-lg"></i></a></li>
+            <li><a href="/logout" class=""><i class="fa fa-sign-out fa-lg"></i></a></li>
           {{else}}
             <li><a href="/login" class="">Login</a></li>
             <li><a href="/signup" class="">Signup</a></li>
@@ -46,8 +46,9 @@
     </main>
 
     <footer>
-      © 2013 | Made in Berlin with  <i class="fa fa-heart"></i>
+      <p>© 2013 From Berlin with  <i class="fa fa-heart"></i></p> <a href="https://twitter.com/ivohanke"><i class="fa fa-twitter fa-2x"></i></a> <a href="mailto:flowd@ivohanke.de"><i class="fa fa-envelope fa-2x"></i></a>
     </footer>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/vendor/jquery-1.10.2.min.js"></script>
     <script src="js/scripts.min.js"></script>

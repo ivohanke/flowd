@@ -51,7 +51,17 @@ header{
       color: @body-bg;
     }
     .navbar-header{
-      color: @body-bg;
+      button{
+        color: @body-bg;
+        border: 1px solid @body-bg;
+        &:hover, &:focus{
+          background: @body-bg;
+          color: @brand-primary;
+        }
+        .icon-bar{
+          background: @body-bg;
+        }
+      }
     }
     .navbar-nav{
       a{
@@ -83,8 +93,10 @@ main{
         min-height: 800px;
         margin: 10px 0;
         padding: 5px;
-        border: 1px solid darken(@brand-fourth, 5%);
+        background: darken(@brand-fourth, 10%);
         .note{
+          display: block;
+          overflow: hidden;
           position: relative;
           margin-bottom: 10px;
           padding: 20px 10px 10px 10px;
@@ -123,10 +135,26 @@ footer{
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 10px;
   font-size: 10px;
   color: @white;
   background: @brand-secondary;
+  p{
+    display: inline-block;
+    margin: 0;
+    padding: 15px ;
+    color: @gray-light;
+    span{
+      margin-right: 40px;
+    }
+  }
+  a{
+    display: inline-block;
+    color: @gray-light;
+    margin-left: 10px;
+    i{
+      vertical-align: middle;
+    }
+  }
 }
 
 /* ==========================================================================
