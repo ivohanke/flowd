@@ -15,10 +15,17 @@
 @gray-light:             lighten(#000, 60%);   // #999
 @gray-lighter:           lighten(#000, 93.5%); // #eee
 
+
+
 // Brand colors
 // -------------------------
+@white:                 #f2f2f2;
 
-@brand-primary:         #428bca;
+@brand-primary:         #FF3125;
+@brand-secondary:       #3B4044;
+@brand-third:           #494948;
+@brand-fourth:          #E6E1D8;
+@brand-fifth:           #F7F2E9;
 @brand-success:         #5cb85c;
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;
@@ -27,8 +34,8 @@
 // Scaffolding
 // -------------------------
 
-@body-bg:               #fff;
-@text-color:            @gray-dark;
+@body-bg:               @brand-fifth;
+@text-color:            @gray-light;
 
 // Links
 // -------------------------
@@ -39,7 +46,7 @@
 // Typography
 // -------------------------
 
-@font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-sans-serif:  "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
@@ -58,10 +65,10 @@
 @line-height-base:        1.428571429; // 20/14
 @line-height-computed:    floor((@font-size-base * @line-height-base)); // ~20px
 
-@headings-font-family:    inherit;
-@headings-font-weight:    500;
-@headings-line-height:    1.1;
-@headings-color:          inherit;
+@headings-font-family:    "Gloria Hallelujah", "Helvetica Neue", Helvetica, Arial, sans-serif;
+@headings-font-weight:    100;
+@headings-line-height:    2;
+@headings-color:          darken(@brand-fourth, 12%);
 
 
 // Iconography
@@ -149,13 +156,13 @@
 // Forms
 // -------------------------
 
-@input-bg:                       #fff;
+@input-bg:                       @white;
 @input-bg-disabled:              @gray-lighter;
 
 @input-color:                    @gray;
-@input-border:                   #ccc;
+@input-border:                   @gray-light;;
 @input-border-radius:            @border-radius-base;
-@input-border-focus:             #66afe9;
+@input-border-focus:             @gray-light;
 
 @input-color-placeholder:        @gray-light;
 

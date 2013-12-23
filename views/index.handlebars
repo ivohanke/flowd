@@ -1,16 +1,17 @@
 <div class="container">
-  <div class="col-xs-12 note-board">
-    {{#if user}}
-      {{#if board}}
+  {{#if user}}
+    {{#if board}}
+      <div class="col-xs-12 board">
         {{#each board}}
-          <div class="col-xs-12 col-sm-3 note-column" data-guid="{{this.guid}}">
+          <div class="col-xs-12 col-sm-3 board-column" data-guid="{{this.guid}}">
             <h3>{{this.title}}</h3>
-            <div class="note-column-inner">
+            <div class="board-column-inner">
               {{#each this.content}}
                 <div class="note" data-guid="{{this.guid}}" draggable="true">
-                  <h4 class="subheader">{{this.title}}</h4>
+                  <div class="note-actions"><a href="#"><i class="fa fa-pencil"></i></a><a href="#"><i class="fa fa-bookmark"></i></a><a href="#"><i class="fa fa-envelope"></i></a></div>
+                  <h4>{{this.title}}</h4>
                   {{#if tags }}
-                    <small>Tags: {{this.tags}}</small>
+                    <p><small>Tags: {{this.tags}}</small></p>
                   {{/if}}
                   <p>{{this.content}}</p>
                 </div>
@@ -18,11 +19,13 @@
             </div>
           </div>
         {{/each}}
-      {{else}}
-        <p>You have to connect your Evernote-Account to use flowd. Please edit your <a href="/account">account</a> settings!</p>
-      {{/if}}
+      </div>
     {{else}}
-      <p>Please <a href="/login">Login</a> or <a href="/signup">Signup</a> to use flowd.</p>
+      <p class="text-center">You have to connect your Evernote-Account to use flowd. Please edit your <a href="/account">account</a> settings!</p>
     {{/if}}
+  {{else}}
+    <h1>Scrum driven task management for Evernote</h1>
+    <p>Please <a href="/login">Login</a> or <a href="/signup">Signup</a> to use flowd.</p>
+  {{/if}}
   </div>
 </div>

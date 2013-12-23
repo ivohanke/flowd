@@ -1,8 +1,5 @@
-// Foundation JavaScript
-// Documentation can be found at: http://foundation.zurb.com/docs
+// Sockets
 var socket = io.connect('http://localhost:5000');
-
-$(document).foundation();
 
 $(document).ready(function() {
 
@@ -42,7 +39,6 @@ $(document).ready(function() {
       // Set the source column's HTML to the HTML of the column we dropped on.
       $(dragSrcEl).detach();
       $(this).prepend(dragSrcEl);
-      console.dir(this);
       socket.emit('dropElement', {noteGuid: $(dragSrcEl).data('guid'), notebookGuid: $(this).parent().data('guid')});
     }
 
@@ -55,7 +51,7 @@ $(document).ready(function() {
       $(dragSrcEl).removeClass('lifted');
       //$(dragSrcEl).css('opacity', '1');
 
-    $('.note-column-inner').removeClass('over');
+    $('.board-column-inner').removeClass('over');
   }
 
   $('.note').each(function(index, col) {
@@ -64,8 +60,8 @@ $(document).ready(function() {
     $(col).on('dragleave', handleDragLeave);
     $(col).on('dragend', handleDragEnd);
   });
-  $('.note-column-inner').on('dragover', handleDragOver);
-  $('.note-column-inner').on('drop', handleDrop);
+  $('.board-column-inner').on('dragover', handleDragOver);
+  $('.board-column-inner').on('drop', handleDrop);
   socket.on('dropElementSuccess', function() {
     // Todo: user feedback;
   });

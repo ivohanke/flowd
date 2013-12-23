@@ -8,8 +8,9 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-          'public/bootstrap/js/*.js',
-          'public/js/*.js'],
+          //'public/bootstrap/js/*.js',
+          'public/js/custom.js'
+        ],
         dest: 'public/js/scripts.min.js'
       }
     },
@@ -56,7 +57,8 @@ module.exports = function(grunt) {
       files: [
         '<%= jshint.files %>',
         'public/bootstrap/less/*.less',
-        'public/less/*.less'
+        'public/less/*.less',
+        'public/js/*.js'
       ],
       tasks: ['jshint', 'less', 'concat', 'uglify'],
       livereload: {
@@ -81,8 +83,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
-
-  grunt.registerTask('test', ['jshint', 'qunit']);
 
   grunt.registerTask('default', ['jshint', 'less', 'concat', 'uglify']);
 

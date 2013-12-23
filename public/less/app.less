@@ -41,12 +41,93 @@ body{
 /* ==========================================================================
    Header
    ========================================================================== */
+header{
+  .navbar{
+    background: @brand-primary;
+    .navbar-brand{
+      font-family: 'Gloria Hallelujah';
+      font-size: 32px;
+      line-height: 32px;
+      color: @body-bg;
+    }
+    .navbar-header{
+      color: @body-bg;
+    }
+    .navbar-nav{
+      a{
+        padding-top: 21px;
+        padding-bottom: 21px;
+        color: @body-bg
+      }
+    }
+  }
+}
+
+
+/* ==========================================================================
+   Main
+   ========================================================================== */
+main{
+  overflow: hidden;
+  height: 100%;
+  display: block;
+  .board{
+    overflow: hidden;
+    position: relative;
+
+    margin: 10px 0;
+    background: @brand-fourth;
+    .board-column{
+      height: 100%;
+      .board-column-inner{
+        min-height: 800px;
+        margin: 10px 0;
+        padding: 5px;
+        border: 1px solid darken(@brand-fourth, 5%);
+        .note{
+          position: relative;
+          margin-bottom: 10px;
+          padding: 20px 10px 10px 10px;
+          font-size: 10px;
+          background: @gray-lighter;
+          .note-actions{
+            position: absolute;
+            right: 10px;
+            i{
+              margin-left: 10px;
+            }
+          }
+          h4{
+            margin: 0 0 5px 0;
+            font-size: 12px;
+          }
+
+          p{
+            margin: 5px 0 0 0;
+            small{
+              display: block;
+              color: @brand-primary;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 
 /* ==========================================================================
    Footer
    ========================================================================== */
-
+footer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  font-size: 10px;
+  color: @white;
+  background: @brand-secondary;
+}
 
 /* ==========================================================================
    Media Queries

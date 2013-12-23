@@ -6,43 +6,48 @@
     <title>Homepage</title>
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="stylesheets/font-awesome.min.css" />
     <link rel="stylesheet" href="stylesheets/app.min.css" />
 
     <script src="js/vendor/modernizr.js"></script>
   </head>
   <body>
-    <nav class="navbar navbar-default" role="navigation">
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/">flowd</a>
-      </div>
+    <header>
+      <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">flowd</a>
+        </div>
 
-      <!-- Collect the nav links, forms, and other content for toggling -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
-        {{#if user}}
-          <li><a href="/account" class="">{{user.username}}</a></li>
-          <li><a href="/logout" class="">Logout</a></li>
-        {{else}}
-          <li><a href="/login" class="">Login</a></li>
-          <li><a href="/signup" class="">Signup</a></li>
-        {{/if}}
-        </ul>
-      </div><!-- /.navbar-collapse -->
-    </nav>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+          {{#if user}}
+            <li><a href="/account" class="">{{user.username}}</a></li>
+            <li><a href="/logout" class="">Logout</a></li>
+          {{else}}
+            <li><a href="/login" class="">Login</a></li>
+            <li><a href="/signup" class="">Signup</a></li>
+          {{/if}}
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </nav>
+    </header>
 
-    <div class="main">
+    <main>
       {{{body}}}
-    </div>
+    </main>
 
-    </div>
+    <footer>
+      © 2013 | Made in Berlin with  <i class="fa fa-heart"></i>
+    </footer>
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/vendor/jquery-1.10.2.min.js"></script>
     <script src="js/scripts.min.js"></script>
