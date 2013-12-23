@@ -88,14 +88,13 @@ main{
     position: relative;
     margin: 10px 0 80px 0;
     padding: 0;
-    background: darken(@body-bg, 3%);
+    background: darken(@body-bg, 5%);
     .board-column{
       height: 100%;
       .board-column-inner{
         min-height: 800px;
-        margin: 10px 0;
-        padding: 5px;
-        background: darken(@brand-fourth, 10%);
+        margin: 10px 0 0 0;
+        background: darken(@body-bg, 7%);
         .note{
           display: block;
           overflow: hidden;
@@ -104,6 +103,7 @@ main{
           padding: 10px;
           font-size: 10px;
           background: @gray-lighter;
+          border-left: 2px solid @brand-primary;
           .note-actions{
             position: absolute;
             right: 10px;
