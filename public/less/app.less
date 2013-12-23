@@ -33,7 +33,9 @@
    ========================================================================== */
 
 body{
-
+  h1, h2, h3, h4, h5, h6{
+    margin-bottom: 20px;
+  }
 }
 
 
@@ -84,9 +86,9 @@ main{
   .board{
     overflow: hidden;
     position: relative;
-
-    margin: 10px 0;
-    background: @brand-fourth;
+    margin: 10px 0 80px 0;
+    padding: 0;
+    background: darken(@body-bg, 3%);
     .board-column{
       height: 100%;
       .board-column-inner{
@@ -99,7 +101,7 @@ main{
           overflow: hidden;
           position: relative;
           margin-bottom: 10px;
-          padding: 20px 10px 10px 10px;
+          padding: 10px;
           font-size: 10px;
           background: @gray-lighter;
           .note-actions{
@@ -109,7 +111,11 @@ main{
               margin-left: 10px;
             }
           }
+          &.lifted{
+            border: 1px solid @brand-primary;
+          }
           h4{
+            width: 50%;
             margin: 0 0 5px 0;
             font-size: 12px;
           }
@@ -118,11 +124,19 @@ main{
             margin: 5px 0 0 0;
             small{
               display: block;
-              color: @brand-primary;
+              color: @gray;
             }
           }
         }
       }
+    }
+  }
+  .account{
+    h3{
+      margin-top: 0;
+    }
+    form{
+      margin: 10px 0 60px 0;
     }
   }
 }
@@ -141,7 +155,7 @@ footer{
   p{
     display: inline-block;
     margin: 0;
-    padding: 15px ;
+    padding: 20px;
     color: @gray-light;
     span{
       margin-right: 40px;
