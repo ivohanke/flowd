@@ -1,13 +1,13 @@
-<div class="row">
-  <div class="small-12 columns note-board">
+<div class="container">
+  <div class="col-xs-12 note-board">
     {{#if user}}
       {{#if board}}
         {{#each board}}
-          <div class="small-12 medium-3 large-3 columns note-column" data-guid="{{this.guid}}">
+          <div class="col-xs-12 col-sm-3 note-column" data-guid="{{this.guid}}">
             <h3>{{this.title}}</h3>
             <div class="note-column-inner">
               {{#each this.content}}
-                <div class="small-12 note" data-guid="{{this.guid}}" draggable="true">
+                <div class="note" data-guid="{{this.guid}}" draggable="true">
                   <h4 class="subheader">{{this.title}}</h4>
                   {{#if tags }}
                     <small>Tags: {{this.tags}}</small>

@@ -13,7 +13,6 @@ var express = require('express'),
     mongodb = require('mongodb'),
     mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
-    $ = require('jquery'),
     SALT_WORK_FACTOR = 10,
     hbs;
 

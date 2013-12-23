@@ -4,64 +4,47 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Homepage</title>
-    <link rel="stylesheet" href="stylesheets/app.css" />
+
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Gloria+Hallelujah' rel='stylesheet' type='text/css'>
-    <script src="bower_components/modernizr/modernizr.js"></script>
+    <link rel="stylesheet" href="stylesheets/font-awesome.min.css" />
+    <link rel="stylesheet" href="stylesheets/app.min.css" />
+
+    <script src="js/vendor/modernizr.js"></script>
   </head>
   <body>
-    <div class="off-canvas-wrap">
-      <div class="inner-wrap">
-        <nav class="top-bar hide-for-small fixed contain-to-grid" data-topbar>
-          <ul class="title-area">
-            <li class="name">
-              <h1><a href="/">flowd</a></h1>
-              <span>Scrum driven task management for Evernote</span>
-            </li>
-          </ul>
-
-          <section class="top-bar-section">
-            <!-- Right Nav Section -->
-            <ul class="right">
-              {{#if user}}
-                <li><a href="/account" class="">{{user.username}}</a></li>
-                <li><a href="/logout" class="">Logout</a></li>
-              {{else}}
-                <li><a href="/login" class="">Login</a></li>
-                <li><a href="/signup" class="">Signup</a></li>
-              {{/if}}
-            </ul>
-
-          </section>
-        </nav>
-
-        <nav class="tab-bar show-for-small">
-          <a class="left-off-canvas-toggle menu-icon" ><span>flowd</span></a>
-        </nav>
-
-        <aside class="left-off-canvas-menu">
-
-          <ul class="off-canvas-list">
-            <li class="first"><label>Menu</label></li>
-              {{#if user}}
-                <li><a href="/account" class="">{{user.username}}</a></li>
-                <li><a href="/logout" class="">Logout</a></li>
-              {{else}}
-                <li><a href="/login" class="">Login</a></li>
-                <li><a href="/signup" class="">Signup</a></li>
-              {{/if}}
-          </ul>
-        </aside>
-        <div class="main">
-          {{{body}}}
-        </div>
-
+    <nav class="navbar navbar-default" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">flowd</a>
       </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+        {{#if user}}
+          <li><a href="/account" class="">{{user.username}}</a></li>
+          <li><a href="/logout" class="">Logout</a></li>
+        {{else}}
+          <li><a href="/login" class="">Login</a></li>
+          <li><a href="/signup" class="">Signup</a></li>
+        {{/if}}
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <div class="main">
+      {{{body}}}
+    </div>
+
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="bower_components/jquery/jquery.js"></script>
-    <script src="bower_components/foundation/js/foundation.min.js"></script>
-    <script src="bower_components/foundation/js/foundation/foundation.topbar.js"></script>
-    <script src="js/custom.js"></script>
+    <script src="js/vendor/jquery-1.10.2.min.js"></script>
+    <script src="js/scripts.min.js"></script>
   </body>
 </html>

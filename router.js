@@ -5,6 +5,12 @@ var passport = require('passport'),
 
 module.exports = function(app, User, io) {
 
+  function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect('/login');
+  }
 
   // Index routes
   app.get('/', function(req, res, next){
@@ -247,14 +253,6 @@ module.exports = function(app, User, io) {
     req.logout();
     res.redirect('/');
   });
-
-  function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    res.redirect('/login');
-  }
-
 
 
   // Evernote routes
