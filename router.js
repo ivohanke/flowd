@@ -303,7 +303,34 @@ module.exports = function(app, User, io) {
 //   });
 // };
 
-  // Edit node/partial
+
+  // Mail node partial
+  app.get('/mail/:note', function(req, res, next){
+    if(req.user && req.user.evernoteToken) {
+      var client = new Evernote.Client({
+            token: req.user.evernoteToken,
+            sandbox: true
+          }),
+          noteStore = client.getNoteStore();
+
+      // Get note with content
+      noteStore.getNote(req.user.evernoteToken, req.param('note'), true, false, false, false, function(err, note){
+        if (err) {
+          console.error(err);
+          return next(err);
+        }
+        // var $ = cheerio.load(note.content);
+        // $('en-note div').html()
+        res.render('mail', { user: req.user, note: note, layout: 'mail'});
+      });
+
+    } else {
+      res.redirect('/login');
+    }
+  });
+
+
+  // Edit node partial
   app.get('/note/:note', function(req, res, next){
     if(req.user && req.user.evernoteToken) {
       var client = new Evernote.Client({

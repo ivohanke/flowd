@@ -1,0 +1,26 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        {{#if note}}
+          <h4 class="modal-title" id="myModalLabel">Send note by mail</h4>
+        {{else}}
+          <h4 class="modal-title" id="myModalLabel">Error</h4>
+        {{/if}}
+      </div>
+      <div class="modal-body">
+        <h2>{{note.title}}</h2>
+        {{#if note}}
+          {{{note.content}}}
+        {{else}}
+          <p>There is obviously a problem!</p>
+        {{/if}}
+        <p>&nbsp;</p>
+         <input type="email" name="email" placeholder="Please enter an email" />
+      </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-primary">Send</button>
+    </div>
+  </div>
+</div>
