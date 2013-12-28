@@ -217,11 +217,10 @@ server.listen(app.get('port'), function(){
 
 // Websockets
 var io = require("socket.io").listen(server);
-
-io.sockets.on('connection', function (socket) {
-
-  // Router
-  require('./router')(app, User, socket);
+io.sockets.on('connection', function(socket) {
+  socket.send('Connected to Server!');
 
 });
 
+// Router
+require('./router')(app, User, io);

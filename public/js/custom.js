@@ -66,13 +66,29 @@ $(document).ready(function() {
   $('.board-column-inner').on('dragover', handleDragOver);
   $('.board-column-inner').on('drop', handleDrop);
 
-  socket.on('dropElementSuccess', function(data) {
-    console.dir(data);
+
+  socket.on('message', function(message) {
+    console.log(message);
   });
 
+  socket.on('dropElementSuccess', function(data) {
+    // Todo
+  });
 
-  socket.on('updateNote', function(data) {
-    console.dir(data);
+  // Update note
+  socket.on('update', function(data) {
+    var query = data.query;
+    if (query.reason && query.reason === 'update') {
+      if (query.guid) {
+
+        // Find note (if one)
+        var updatedSrcEl = $('div[data-guid=' + query.guid + ']');
+
+        // Update Notebook
+        updatedSrcEl.detach();
+        $('div[data-guid=' + query.notebookGuid + '] .board-column-inner').prepend(updatedSrcEl);
+      }
+    }
   });
 
 

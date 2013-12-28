@@ -3,7 +3,7 @@ var passport = require('passport'),
     async = require('async'),
     cheerio = require('cheerio');
 
-module.exports = function(app, User, socket) {
+module.exports = function(app, User, io) {
 
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -14,7 +14,9 @@ module.exports = function(app, User, socket) {
 
   // Index routes
   app.get('/', function(req, res, next){
-    console.dir(req.param);
+
+    console.dir(req.user);
+
     // Function to
     function getNotes(token, noteStore, noteFilter, callback) {
       noteStore.findNotes(token, noteFilter, 0, 100, function(err, result) {
@@ -142,15 +144,9 @@ module.exports = function(app, User, socket) {
         res.render('index', { user: req.user, board: results });
       });
 
-      // Sockets
-      socket.on('dropElement', function (data) {
-        updateNotebook(data.noteGuid, data.notebookGuid, token, noteStore, function() {
-          socket.emit('dropElementSuccess', {result: 'success' });
-        });
-      });
-
-    } else if (req.param('reason') && req.param('reason') == 'update') {
-      socket.emit('updateNote', { userId: req.param('reason'), guid: req.param('guid'), notebookGuid: req.param('notebookGuid') });
+    } else if (req.query.reason) {
+      io.sockets.emit('update', { query: req.query });
+      res.render('index');
     } else {
       res.render('index');
     }
