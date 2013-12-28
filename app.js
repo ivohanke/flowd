@@ -190,7 +190,7 @@ var app = express(),
     server = http.createServer(app);
 
 app.configure(function() {
-  app.set('port', process.env.PORT || 5000);
+  app.set('port', process.env.PORT || 3000);
   app.engine('handlebars', hbs.engine);
   app.set('view engine', 'handlebars');
   app.locals.pretty = true;
