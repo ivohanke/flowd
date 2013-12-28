@@ -3,7 +3,7 @@ var passport = require('passport'),
     async = require('async'),
     cheerio = require('cheerio');
 
-module.exports = function(app, User, io) {
+module.exports = function(app, User, socket) {
 
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {

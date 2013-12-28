@@ -218,6 +218,10 @@ server.listen(app.get('port'), function(){
 // Websockets
 var io = require("socket.io").listen(server);
 
+io.sockets.on('connection', function (socket) {
 
-// Router
-require('./router')(app, User, io);
+  // Router
+  require('./router')(app, User, socket);
+
+});
+
