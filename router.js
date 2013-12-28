@@ -14,7 +14,7 @@ module.exports = function(app, User, socket) {
 
   // Index routes
   app.get('/', function(req, res, next){
-
+    console.dir(req.param);
     // Function to
     function getNotes(token, noteStore, noteFilter, callback) {
       noteStore.findNotes(token, noteFilter, 0, 100, function(err, result) {
@@ -79,7 +79,7 @@ module.exports = function(app, User, socket) {
       });
     }
 
-    if(req.user && req.user.evernoteToken) {
+    if (req.user && req.user.evernoteToken) {
 
       var token = req.user.evernoteToken,
           client = new Evernote.Client({
@@ -151,6 +151,8 @@ module.exports = function(app, User, socket) {
 
     } else if (req.param('reason') && req.param('reason') == 'update') {
       socket.emit('updateNote', { userId: req.param('reason'), guid: req.param('guid'), notebookGuid: req.param('notebookGuid') });
+    } else {
+      res.render('index');
     }
 
   });
