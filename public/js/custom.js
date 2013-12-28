@@ -1,5 +1,5 @@
 // Sockets
-var socket = io.connect('http://localhost:5000');
+var socket = io.connect('http://flowd.herokuapp.com:5000');
 
 $(document).ready(function() {
 
