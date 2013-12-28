@@ -24,6 +24,7 @@ module.exports = function(app, User, io) {
         }
         if (result.totalNotes > 0) {
           var notes = result.notes;
+          console.dir(notes);
           var notesLibrary =  {
             getContent: function(note, callback) {
               noteStore.getNoteContent(req.user.evernoteToken, note.guid, function(err, content) {
@@ -142,16 +143,14 @@ module.exports = function(app, User, io) {
       });
 
       // Sockets
-      io.sockets.on('connection', function (socket) {
-        socket.on('dropElement', function (data) {
-          updateNotebook(data.noteGuid, data.notebookGuid, token, noteStore, function() {
-            socket.emit('dropElementSuccess', {result: 'success' });
-          });
+      socket.on('dropElement', function (data) {
+        updateNotebook(data.noteGuid, data.notebookGuid, token, noteStore, function() {
+          socket.emit('dropElementSuccess', {result: 'success' });
         });
       });
 
-    } else {
-      res.render('index', {user: req.user});
+    } else if (req.param('reason') && req.param('reason') == 'update') {
+      socket.emit('updateNote', { userId: req.param('reason'), guid: req.param('guid'), notebookGuid: req.param('notebookGuid') });
     }
 
   });
