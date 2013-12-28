@@ -5,7 +5,7 @@ App = {
   socket: io.connect('http://flowd.herokuapp.com:3000'),
   initialize: function() {
 
-    this.handleDragdrop();
+    this.handleDragDrop();
     this.handleSockets();
   },
   handleDragDrop: function() {
@@ -101,7 +101,7 @@ App = {
     });
   }
 
-}
+};
 
 $(document).ready(function() {
 
