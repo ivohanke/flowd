@@ -111,12 +111,16 @@ main{
             i{
               margin-left: 10px;
             }
+            .synced{
+              color: green;
+            }
           }
           &.lifted{
             border: 1px solid @brand-primary;
           }
           &.emphasized{
             background: lighten(@gray-lighter, 5%);
+            box-shadow: 0 0 5px rgba(red(@brand-primary), green(@brand-primary), blue(@brand-primary), .3);
           }
           h4{
             width: 50%;

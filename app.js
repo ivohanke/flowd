@@ -1,6 +1,5 @@
-
 /**
- * Module dependencies.
+ * App
  */
 
 var express = require('express'),
@@ -126,7 +125,7 @@ passport.use(new EvernoteStrategy({
     userAuthorizationURL: 'https://sandbox.evernote.com/OAuth.action',
     consumerKey: 'ivohanke-5271',
     consumerSecret: '17d4bc3c8a32d092',
-    callbackURL: "/auth/evernote/callback"
+    callbackURL: '/auth/evernote/callback'
   },
   function(token, tokenSecret, profile, done) {
     process.nextTick(function () {
@@ -148,13 +147,13 @@ hbs = exphbs.create({
       var operators, result;
 
       if (arguments.length < 3) {
-        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+        throw new Error('Handlerbars Helper "compare" needs 2 parameters');
       }
 
       if (options === undefined) {
         options = rvalue;
         rvalue = operator;
-        operator = "===";
+        operator = '===';
       }
 
       operators = {
@@ -170,7 +169,7 @@ hbs = exphbs.create({
       };
 
       if (!operators[operator]) {
-        throw new Error("Handlerbars Helper 'compare' doesn't know the operator " + operator);
+        throw new Error('Handlerbars Helper "compare" doesn`t know the operator ' + operator);
       }
 
       result = operators[operator](lvalue, rvalue);
@@ -201,8 +200,8 @@ app.configure(function() {
   app.use(express.session({ secret: 'keyboard cat' }));
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+  app.use(app.router);
 });
 
 app.configure('development', function(){
@@ -215,11 +214,14 @@ server.listen(app.get('port'), function(){
 
 
 
-// Websockets
-var io = require("socket.io").listen(server);
+// Modules
+var io = require('socket.io').listen(server),
+    flowd = require('./flowd')();
+
+//Router
+require('./router')(app, io, flowd);
+
+// Sockets
 io.sockets.on('connection', function(socket) {
   socket.send('Connected to Server!');
 });
-
-// Router
-require('./router')(app, User, io);

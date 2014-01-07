@@ -1,9 +1,12 @@
-var passport = require('passport'),
-    Evernote = require('evernote').Evernote,
-    async = require('async'),
-    cheerio = require('cheerio');
+/**
+ * Router
+ */
 
-module.exports = function(app, User, io) {
+ var passport = require('passport'),
+    Evernote = require('evernote').Evernote,
+    async = require('async');
+
+module.exports = function(app, io, flowd) {
 
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -15,87 +18,16 @@ module.exports = function(app, User, io) {
   // Index routes
   app.get('/', function(req, res, next){
 
-    console.dir(req.user);
-
-    // Function to
-    function getNotes(token, noteStore, noteFilter, callback) {
-      noteStore.findNotes(token, noteFilter, 0, 100, function(err, result) {
-        if (err) {
-          console.error(err);
-          return next(err);
-        }
-        if (result.totalNotes > 0) {
-          var notes = result.notes;
-          console.dir(notes);
-          var notesLibrary =  {
-            getContent: function(note, callback) {
-              noteStore.getNoteContent(req.user.evernoteToken, note.guid, function(err, content) {
-                var $ = cheerio.load(content);
-                note.content = $('en-note div').html().substring(0,200) + '...';
-                callback(err, note);
-              });
-            },
-            getTags: function(note, callback) {
-              noteStore.getNoteTagNames(req.user.evernoteToken, note.guid, function(err, tags) {
-                note.tags = tags;
-                callback(err, note);
-              });
-            }
-          };
-          async.map(notes, notesLibrary.getContent, function(err, notesWithContent){
-            if (err) {
-              console.error(err);
-              return next(err);
-            }
-            async.map(notesWithContent, notesLibrary.getTags, function(err, notesWithContentAndTags){
-              if (err) {
-                console.error(err);
-                return next(err);
-              }
-              callback(null, notesWithContentAndTags);
-            });
-          });
-        } else {
-          callback(null, {});
-        }
-      });
-    }
-
-    // Update note
-    function updateNotebook(note, notebook, token, noteStore, callback) {
-      async.waterfall([
-        function(callback) {
-          noteStore.getNote(token, note, false, false, false, false, function(err, result) {
-            callback(null, result);
-          });
-        },
-        function(note, callback) {
-          var updatedNote = note;
-          updatedNote.notebookGuid = notebook; // update notebook guid
-          noteStore.updateNote(token, updatedNote, function(err, result) {
-            callback(null, result);
-          });
-        }
-      ], function(err, result) {
-        // Successfully updated
-      });
-    }
-
     if (req.user && req.user.evernoteToken) {
 
       var token = req.user.evernoteToken,
-          client = new Evernote.Client({
-            token: token,
-            sandbox: true
-          }),
-          noteStore = client.getNoteStore(),
           board = {};
 
       async.parallel([
         function(callback) {
           var todoFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteTodoNotebook}),
               obj = {};
-          getNotes(token, noteStore, todoFilter, function(err, result) {
+          flowd.getNotes(req.user, todoFilter, function(err, result) {
             obj = {
               title: 'Todo',
               guid: req.user.evernoteTodoNotebook,
@@ -107,7 +39,7 @@ module.exports = function(app, User, io) {
         function(callback) {
           var inProgressFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteInProgressNotebook}),
               obj = {};
-          getNotes(token, noteStore, inProgressFilter, function(err, result) {
+          flowd.getNotes(req.user, inProgressFilter, function(err, result) {
             obj = {
               title: 'In Progress',
               guid: req.user.evernoteInProgressNotebook,
@@ -119,7 +51,7 @@ module.exports = function(app, User, io) {
         function(callback) {
           var testFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteTestNotebook}),
               obj = {};
-          getNotes(token, noteStore, testFilter, function(err, result) {
+          flowd.getNotes(req.user, testFilter, function(err, result) {
             obj = {
               title: 'Test',
               guid: req.user.evernoteTestNotebook,
@@ -131,7 +63,7 @@ module.exports = function(app, User, io) {
         function(callback) {
           var doneFilter = new Evernote.NoteFilter({notebookGuid: req.user.evernoteDoneNotebook}),
               obj = {};
-          getNotes(token, noteStore, doneFilter, function(err, result) {
+          flowd.getNotes(req.user, doneFilter, function(err, result) {
             var obj = {
               title: 'Done',
               guid: req.user.evernoteDoneNotebook,
@@ -144,15 +76,38 @@ module.exports = function(app, User, io) {
         res.render('index', { user: req.user, board: results });
       });
 
-    } else if (req.query.reason) {
-      io.sockets.emit('update', { query: req.query });
-      res.render('index');
+      io.sockets.on('connection', function(socket) {
+        socket.on('dropElement', function(data) {
+          if (data) {
+            flowd.updateNote(req.user, data.noteGuid, data.notebookGuid, function(err, result, note) {
+              if (err) {
+                console.error(err);
+                return;
+              }
+              socket.emit('noteSync', { result: result });
+            });
+          }
+        });
+      });
+
     } else {
       res.render('index');
     }
 
   });
 
+  // Webhook route
+  app.get('/hook', function(req, res) {
+    if (req.query.reason && req.query.reason == 'update') {
+      io.sockets.emit('update', { query: req.query });
+      res.render('index');
+    } else if (req.query.reason && req.query.reason == 'create') {
+      io.sockets.emit('create', { query: req.query });
+      res.render('index');
+    } else {
+      res.render('index');
+    }
+  });
 
   // Signup routes
   app.get('/signup', function(req, res){
@@ -180,6 +135,7 @@ module.exports = function(app, User, io) {
     }
   });
 
+  // Account routes
   app.get('/account', ensureAuthenticated, function(req, res){
     if(req.user && req.user.evernoteToken) {
       var client = new Evernote.Client({
@@ -242,7 +198,7 @@ module.exports = function(app, User, io) {
   });
 
 
-  // Logout routes
+  // Logout route
   app.get('/logout', function(req, res){
     req.logout();
     res.redirect('/');
@@ -269,36 +225,6 @@ module.exports = function(app, User, io) {
       });
     })(req, res, next);
   });
-
-
-  // Webhook routes
-//   app.get('/set/:note/:notebook', function(req, res, next){
-//     if(req.user && req.user.evernoteToken) {
-//       var client = new Evernote.Client({
-//         token: req.user.evernoteToken,
-//         sandbox: true
-//       });
-//       var noteStore = client.getNoteStore();
-//       noteStore.listTags(req.user.evernoteToken, function(err, list) {
-//         console.log(list);
-//       });
-//       noteStore.getNote(req.user.evernoteToken, req.param('note'), false, false, false, false, function(err, note){
-//         if (err) {
-//           console.error(err);
-//           return next(err);
-//         }
-//         note.tagGuids = '';
-//         noteStore.updateNote(req.user.evernoteToken, note, function(err, result){
-//           if (err) {
-//             console.error(err);
-//             return next(err);
-//           }
-//           res.redirect('/account');
-//         });
-//       });
-//     }
-//   });
-// };
 
 
   // Mail node partial
