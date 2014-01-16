@@ -81,6 +81,7 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 // Create user from schema
 var User = mongoose.model('User', userSchema);
 
+// User.collection.drop(); // Maintainance
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {

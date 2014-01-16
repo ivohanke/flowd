@@ -4,7 +4,7 @@
       <div class="col-xs-12 board">
         {{#each board}}
           <div class="col-xs-12 col-sm-3 board-column" data-guid="{{this.guid}}">
-            <h3>{{this.title}}<span class="badge pull-right">21</span></h3>
+            <h3>{{this.title}}<span class="badge pull-right">{{this.content.length}}</span></h3>
             <div class="board-column-inner">
               {{#each this.content}}
                 <div class="note" data-guid="{{this.guid}}" draggable="true">

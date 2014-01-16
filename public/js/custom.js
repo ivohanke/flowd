@@ -55,6 +55,9 @@ App = {
         $(dragSrcEl).detach();
         $(this).prepend(dragSrcEl);
         App.socket.emit('dropElement', {noteGuid: $(dragSrcEl).data('guid'), notebookGuid: $(this).parent().data('guid')});
+        $('.board-column').each(function(index, element) {
+          $('.badge', element).html($('.note', element).length);
+        });
       }
 
       return false;
@@ -63,8 +66,8 @@ App = {
     function handleDragEnd(e) {
       // this/e.target is the source node.
 
-        $(dragSrcEl).removeClass('lifted');
-        $(dragSrcEl).css('opacity', '1');
+      $(dragSrcEl).removeClass('lifted');
+      $(dragSrcEl).css('opacity', '1');
 
       $('.board-column-inner').removeClass('over');
     }
@@ -106,6 +109,9 @@ App = {
           // Update Notebook
           updatedSrcEl.detach();
           $('div[data-guid=' + query.notebookGuid + '] .board-column-inner').prepend(updatedSrcEl);
+          $('.board-column').each(function(index, element) {
+            $('.badge', element).html($('.note', element).length);
+          });
         }
       }
     });
