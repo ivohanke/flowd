@@ -6,7 +6,7 @@
     Evernote = require('evernote').Evernote,
     async = require('async');
 
-module.exports = function(app, io, flowd) {
+module.exports = function(app, io, flowd, User) {
 
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -73,7 +73,7 @@ module.exports = function(app, io, flowd) {
           });
         },
       ], function(err, results) {
-        res.render('index', { user: req.user, board: results });
+        res.render('index', {user: req.user, board: results});
       });
 
       io.sockets.on('connection', function(socket) {
@@ -84,7 +84,7 @@ module.exports = function(app, io, flowd) {
                 console.error(err);
                 return;
               }
-              socket.emit('noteSync', { result: result });
+              socket.emit('noteSync', {result: result});
             });
           }
         });
@@ -102,7 +102,7 @@ module.exports = function(app, io, flowd) {
       io.sockets.emit('update', { query: req.query });
       res.render('index');
     } else if (req.query.reason && req.query.reason == 'create') {
-      io.sockets.emit('create', { query: req.query });
+      io.sockets.emit('create', {query: req.query});
       res.render('index');
     } else {
       res.render('index');
@@ -111,27 +111,38 @@ module.exports = function(app, io, flowd) {
 
   // Signup routes
   app.get('/signup', function(req, res){
-    res.render('signup');
+    res.render('signup', {message: req.flash('error')});
   });
 
   app.post('/signup', function(req, res, next){
-    if (req.body.username && req.body.email && req.body.password) {
-      var newUser = new User(req.body);
-      newUser.save(function (err) {
-        if (err) {
-          console.error(err);
-          return next(err);
-        }
-        req.login(newUser, function (err) {
+    if (req.body.username && req.body.email && req.body.password && req.body.confirm) {
+      if (req.body.password == req.body.confirm) {
+        var newUser = new User(req.body);
+        newUser.save(function (err) {
           if (err) {
-            console.error(err);
-            return next(err);
+            if (err.name) {
+              res.render('signup', {
+                username: req.body.username,
+                email: req.body.email,
+                message: 'User already exists'
+              });
+            } else {
+              res.render('signup', {message: err});
+            }
+          } else {
+            req.login(newUser, function(err) {
+              if (err) {
+                return next(err);
+              }
+              return res.redirect('/account');
+            });
           }
-          res.redirect('/');
         });
-      });
+      } else {
+        res.render('signup', {message: 'Password confirmation failed'});
+      }
     } else {
-      res.redirect('/signup', { user: req.user, message: req.session.messages });
+     res.render('signup', {message: 'Validate form fields'});
     }
   });
 
@@ -183,19 +194,21 @@ module.exports = function(app, io, flowd) {
         });
       });
     } else {
-      res.redirect('/account'); //, { user: req.user, message: req.session.messages });
+      res.redirect('/account');
     }
   });
 
 
   // Login routes
   app.get('/login', function(req, res){
-    res.render('login', { user: req.user, message: req.session.messages });
+    res.render('login', {message: req.flash('error')});
   });
 
-  app.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), function(req, res) {
-    res.redirect('/');
-  });
+  app.post('/login', passport.authenticate('local', {failureRedirect: '/login', failureFlash: true}),
+    function(req, res) {
+      res.redirect('/');
+    }
+  );
 
 
   // Logout route

@@ -6,93 +6,101 @@
       {{/if}}
     </div>
   </div>
-  <div class="col-xs-12 col-md-6">
-    <h3>Account</h3>
-  </div>
-  <div class="col-xs-12 col-md-6">
-    <form role="form" action="/account" method="post">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input class="form-control" id="username" type="userename" value="{{user.username}}" />
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input class="form-control" id="email" type="email" value="{{user.email}}" />
-      </div>
-      <div class="form-group">
-        <input class="btn btn-default" type="submit" value="Save"/>
-      </div>
-    </form>
-  </div>
-  <div class="col-xs-12 col-md-6">
-    <h3>Evernote configuration</h3>
-  </div>
-  <div class="col-xs-12 col-md-6">
-    {{#if user.evernoteToken}}
-      <form role="form" action="/account/config" method="post">
+  <section>
+    <div class="col-sm-12 col-md-6">
+      <h3>Account</h3>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <form role="form" action="/account" method="post">
         <div class="form-group">
-          <label for="evernoteTodoNotebook">ToDo Notebook</label>
-          <select class="form-control" name="evernoteTodoNotebook">
-          {{#each notebooks}}
-            {{#compare ../user.evernoteTodoNotebook "==" this.guid}}
-              <option value="{{this.guid}}" selected>{{this.name}}</option>
-            {{else}}
-              <option value="{{this.guid}}">{{this.name}}</option>
-            {{/compare}}
-          {{/each}}
-          </select>
+          <label for="username">Username</label>
+          <input class="form-control" id="username" type="userename" value="{{user.username}}" />
         </div>
         <div class="form-group">
-          <label for="evernoteInProgressNotebook">In Progress Notebook</label>
-          <select class="form-control" name="evernoteInProgressNotebook">
-          {{#each notebooks}}
-            {{#compare ../user.evernoteInProgressNotebook "==" this.guid}}
-              <option value="{{this.guid}}" selected>{{this.name}}</option>
-            {{else}}
-              <option value="{{this.guid}}">{{this.name}}</option>
-            {{/compare}}
-          {{/each}}
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="evernoteTestNotebook">Test Notebook</label>
-          <select class="form-control" name="evernoteTestNotebook">
-          {{#each notebooks}}
-            {{#compare ../user.evernoteTestNotebook "==" this.guid}}
-              <option value="{{this.guid}}" selected>{{this.name}}</option>
-            {{else}}
-              <option value="{{this.guid}}">{{this.name}}</option>
-            {{/compare}}
-          {{/each}}
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="evernoteDoneNotebook">Done Notebook</label>
-          <select class="form-control" name="evernoteDoneNotebook">
-          {{#each notebooks}}
-            {{#compare ../user.evernoteDoneNotebook "==" this.guid}}
-              <option value="{{this.guid}}" selected>{{this.name}}</option>
-            {{else}}
-              <option value="{{this.guid}}">{{this.name}}</option>
-            {{/compare}}
-          {{/each}}
-          </select>
+          <label for="email">Email</label>
+          <input class="form-control" id="email" type="email" value="{{user.email}}" />
         </div>
         <div class="form-group">
           <input class="btn btn-default" type="submit" value="Save"/>
         </div>
       </form>
-    {{else}}
-      <a href="/auth/evernote" class="button">Connect with Evernote.</a>
-    {{/if}}
-  </div>
-  <div class="col-sm-12 col-md-6">
-    <h3>Danger area</h3>
-  </div>
-  <div class="col-sm-12 col-md-6">
-    <p>You can permanently delete your account here. Warning: This can't be undone!</p>
-    <form action="/account/delete" method="post">
-      <input class="btn btn-default" type="submit" value="Delete Account"/>
-    </form>
-  </div>
+    </div>
+  </section>
+  <section>
+    <div class="col-sm-12 col-md-6">
+      <h3>Evernote configuration</h3>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      {{#if user.evernoteToken}}
+        <form role="form" action="/account/config" method="post">
+          <div class="form-group">
+            <label for="evernoteTodoNotebook">ToDo Notebook</label>
+            <select class="form-control" name="evernoteTodoNotebook">
+            {{#each notebooks}}
+              {{#compare ../user.evernoteTodoNotebook "==" this.guid}}
+                <option value="{{this.guid}}" selected>{{this.name}}</option>
+              {{else}}
+                <option value="{{this.guid}}">{{this.name}}</option>
+              {{/compare}}
+            {{/each}}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="evernoteInProgressNotebook">In Progress Notebook</label>
+            <select class="form-control" name="evernoteInProgressNotebook">
+            {{#each notebooks}}
+              {{#compare ../user.evernoteInProgressNotebook "==" this.guid}}
+                <option value="{{this.guid}}" selected>{{this.name}}</option>
+              {{else}}
+                <option value="{{this.guid}}">{{this.name}}</option>
+              {{/compare}}
+            {{/each}}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="evernoteTestNotebook">Test Notebook</label>
+            <select class="form-control" name="evernoteTestNotebook">
+            {{#each notebooks}}
+              {{#compare ../user.evernoteTestNotebook "==" this.guid}}
+                <option value="{{this.guid}}" selected>{{this.name}}</option>
+              {{else}}
+                <option value="{{this.guid}}">{{this.name}}</option>
+              {{/compare}}
+            {{/each}}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="evernoteDoneNotebook">Done Notebook</label>
+            <select class="form-control" name="evernoteDoneNotebook">
+            {{#each notebooks}}
+              {{#compare ../user.evernoteDoneNotebook "==" this.guid}}
+                <option value="{{this.guid}}" selected>{{this.name}}</option>
+              {{else}}
+                <option value="{{this.guid}}">{{this.name}}</option>
+              {{/compare}}
+            {{/each}}
+            </select>
+          </div>
+          <div class="form-group">
+            <input class="btn btn-default" type="submit" value="Save"/>
+          </div>
+        </form>
+      {{else}}
+        <div>
+          <a href="/auth/evernote" class="clearfix btn btn-primary ">Connect with Evernote.</a>
+        </div>
+      {{/if}}
+    </div>
+  </section>
+  <section>
+    <div class="col-sm-12 col-md-6">
+      <h3>Danger area</h3>
+      <p>You can permanently delete your account here. Warning: This can't be undone!</p>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <form action="/account/delete" method="post">
+        <input class="btn btn-default" type="submit" value="Delete Account"/>
+      </form>
+    </div>
+  </section>
 </div>

@@ -9,6 +9,7 @@ var express = require('express'),
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     EvernoteStrategy = require('passport-evernote').Strategy,
+    flash = require('connect-flash'),
     mongodb = require('mongodb'),
     mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
@@ -97,12 +98,12 @@ passport.deserializeUser(function(id, done) {
 });
 
 passport.use(new LocalStrategy(function(username, password, done) {
-  User.findOne({ username: username }, function(err, user) {
+  User.findOne({username: username}, function(err, user) {
     if (err) {
       return done(err);
     }
     if (!user) {
-      return done(null, false, { message: 'Unknown user ' + username });
+      return done(null, false, {message: 'Unknown user ' + username});
     }
     user.comparePassword(password, function(err, isMatch) {
       if (err) {
@@ -200,6 +201,7 @@ app.configure(function() {
   app.use(express.session({ secret: 'keyboard cat' }));
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(flash());
   app.use(express.static(__dirname + '/public'));
   app.use(app.router);
 });
@@ -219,7 +221,7 @@ var io = require('socket.io').listen(server),
     flowd = require('./flowd')();
 
 //Router
-require('./router')(app, io, flowd);
+require('./router')(app, io, flowd, User);
 
 // Sockets
 io.sockets.on('connection', function(socket) {
