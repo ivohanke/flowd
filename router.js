@@ -146,6 +146,26 @@ module.exports = function(app, io, flowd, User) {
     }
   });
 
+
+  // Login routes
+  app.get('/login', function(req, res){
+    res.render('login', {username: '', message: req.flash('error')}); // TODO keep username
+  });
+
+  app.post('/login', passport.authenticate('local', {failureRedirect: '/login', failureFlash: true}),
+    function(req, res) {
+      res.redirect('/');
+    }
+  );
+
+
+  // Logout route
+  app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+
+
   // Account routes
   app.get('/account', ensureAuthenticated, function(req, res){
     if(req.user && req.user.evernoteToken) {
@@ -196,25 +216,6 @@ module.exports = function(app, io, flowd, User) {
     } else {
       res.redirect('/account');
     }
-  });
-
-
-  // Login routes
-  app.get('/login', function(req, res){
-    res.render('login', {message: req.flash('error')});
-  });
-
-  app.post('/login', passport.authenticate('local', {failureRedirect: '/login', failureFlash: true}),
-    function(req, res) {
-      res.redirect('/');
-    }
-  );
-
-
-  // Logout route
-  app.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
   });
 
 
