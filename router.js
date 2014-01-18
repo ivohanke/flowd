@@ -99,8 +99,14 @@ module.exports = function(app, io, flowd, User) {
   // Webhook route
   app.get('/hook', function(req, res) {
     if (req.query.reason && req.query.reason == 'update') {
-      io.sockets.emit('update', { query: req.query });
-      res.redirect('/');
+      flowd.getNote(req.user, req.query.guid, function(err, result) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        io.sockets.emit('update', {note: result});
+        res.redirect('/');
+      });
     } else if (req.query.reason && req.query.reason == 'create') {
       flowd.getNote(req.user, req.query.guid, function(err, result) {
         if (err) {

@@ -99,21 +99,18 @@ App = {
 
     // Update note
     App.socket.on('update', function(data) {
-      var query = data.query;
-      if (query.reason && query.reason === 'update') {
-        if (query.guid) {
+      var note = data.note;
+      // Find note (if one)
+      var updatedSrcEl = $('div[data-guid=' + note.guid + ']');
 
-          // Find note (if one)
-          var updatedSrcEl = $('div[data-guid=' + query.guid + ']');
-
-          // Update Notebook
-          updatedSrcEl.detach();
-          $('div[data-guid=' + query.notebookGuid + '] .board-column-inner').prepend(updatedSrcEl);
-          $('.board-column').each(function(index, element) {
-            $('.badge', element).html($('.note', element).length);
-          });
-        }
-      }
+      // Update Notebook
+      updatedSrcEl.detach();
+      $('h4', updatedSrcEl).html(note.title);
+      $('p', updatedSrcEl).html(note.content);
+      $('div[data-guid=' + note.notebookGuid + '] .board-column-inner').prepend(updatedSrcEl);
+      $('.board-column').each(function(index, element) {
+        $('.badge', element).html($('.note', element).length);
+      });
     });
 
     // Create note
