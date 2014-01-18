@@ -122,18 +122,23 @@ main{
             background: lighten(@gray-lighter, 5%);
             box-shadow: 0 0 5px rgba(red(@brand-primary), green(@brand-primary), blue(@brand-primary), .3);
           }
-          h4{
+          .note-title{
             width: 50%;
             margin: 0 0 5px 0;
             font-size: 12px;
           }
-
-          p{
-            margin: 5px 0 0 0;
+          .note-tags{
+            margin: 10px 0;
             small{
               display: block;
               color: @gray;
             }
+          }
+          .note-content{
+            overflow: hidden;
+            width: 100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
         }
       }

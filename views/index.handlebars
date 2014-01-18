@@ -9,11 +9,11 @@
               {{#each this.content}}
                 <div class="note" data-guid="{{this.guid}}" draggable="true">
                   <div class="note-actions"><i class="synced fa fa-check-circle hidden"></i><a href="/note/{{this.guid}}" data-toggle="modal" data-target="#modalNote"><i class="fa fa-pencil"></i></a><a href="#" class="bookmark"><i class="bookmark fa fa-bookmark"></i></a><a href="/mail/{{this.guid}}" data-toggle="modal" data-target="#modalNote"><i class="fa fa-envelope"></i></a></div>
-                  <h4>{{this.title}}</h4>
+                  <h4 class="note-title">{{this.title}}</h4>
                   {{#if tags }}
-                    <p><small>{{this.tags}}</small></p>
+                    <p class="note-tags"><small>{{this.tags}}</small></p>
                   {{/if}}
-                  <p>{{this.content}}</p>
+                  <p class="note-content">{{this.content}}</p>
                 </div>
               {{/each}}
             </div>

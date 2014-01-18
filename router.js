@@ -99,23 +99,11 @@ module.exports = function(app, io, flowd, User) {
   // Webhook route
   app.get('/hook', function(req, res) {
     if (req.query.reason && req.query.reason == 'update') {
-      flowd.getNote(req.user, req.query.guid, function(err, result) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        io.sockets.emit('update', {note: result});
-        res.redirect('/');
-      });
+      io.sockets.emit('update', {query: req.query});
+      res.redirect('/');
     } else if (req.query.reason && req.query.reason == 'create') {
-      flowd.getNote(req.user, req.query.guid, function(err, result) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        io.sockets.emit('create', {note: result});
-        res.redirect('/');
-      });
+      io.sockets.emit('create', {query: req.query});
+      res.redirect('/');
     } else {
       res.redirect('/');
     }
@@ -282,25 +270,15 @@ module.exports = function(app, io, flowd, User) {
   // Edit node partial
   app.get('/note/:note', function(req, res, next){
     if(req.user && req.user.evernoteToken) {
-      var client = new Evernote.Client({
-            token: req.user.evernoteToken,
-            sandbox: true
-          }),
-          noteStore = client.getNoteStore();
-
-      // Get note with content
-      noteStore.getNote(req.user.evernoteToken, req.param('note'), true, false, false, false, function(err, note){
+      flowd.getNote(req.user, req.param('note'), function(err, result) {
         if (err) {
           console.error(err);
-          return next(err);
+          return;
         }
-        // var $ = cheerio.load(note.content);
-        // $('en-note div').html()
-        res.render('note', { user: req.user, note: note, layout: 'note'});
+        res.send(result);
       });
-
     } else {
-      res.redirect('/login');
+      res.redirect('/');
     }
   });
 };

@@ -11,7 +11,7 @@ module.exports = function() {
   flowd = {
 
   // Function to
-    getNote: function (user, noteGuid, callback) {
+    getNote: function (user, guid, callback) {
       var token = user.evernoteToken,
           client = new Evernote.Client({
                 token: token,
@@ -19,20 +19,21 @@ module.exports = function() {
           }),
           noteStore = client.getNoteStore();
 
-      noteStore.getNote(token, noteGuid, 1, 0, 0, 0, function(err, result) {
+      noteStore.getNote(token, guid, 1, 0, 0, 0, function(err, note) {
         if (err) {
           console.error(err);
           return;
         }
-        var note = result;
-        note.tags =[];
+        var $ = cheerio.load(note.content);
+            note.content = $('en-note div').html();
+
         if (note.tagGuids) {
-          noteStore.getNoteTagNames(token, noteGuid, 1, 0, 0, 0, function(err, result) {
+          noteStore.getNoteTagNames(token, guid, 1, 0, 0, 0, function(err, tags) {
             if (err) {
               console.error(err);
               return;
             }
-            note.tags = result;
+            note.tags = tags;
             callback(null, note);
           });
         } else {
@@ -62,8 +63,7 @@ module.exports = function() {
             getContent: function(note, callback) {
               noteStore.getNoteContent(token, note.guid, function(err, content) {
                 var $ = cheerio.load(content);
-                // TODO
-                //note.content = $('en-note div').html().substring(0,200) + '...';
+                note.content = $('en-note div').html();
                 callback(err, note);
               });
             },
