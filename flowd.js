@@ -62,7 +62,8 @@ module.exports = function() {
             getContent: function(note, callback) {
               noteStore.getNoteContent(token, note.guid, function(err, content) {
                 var $ = cheerio.load(content);
-                note.content = $('en-note div').html().substring(0,200) + '...';
+                // TODO
+                //note.content = $('en-note div').html().substring(0,200) + '...';
                 callback(err, note);
               });
             },

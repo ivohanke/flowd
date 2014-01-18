@@ -99,6 +99,7 @@ App = {
 
     // Update note
     App.socket.on('update', function(data) {
+      console.log('update note');
       var note = data.note;
       // Find note (if one)
       var updatedSrcEl = $('div[data-guid=' + note.guid + ']');
@@ -115,6 +116,7 @@ App = {
 
     // Create note
     App.socket.on('create', function(data) {
+      console.log('create note');
       var note = data.note;
       var html = '<div class="note" data-guid="' + note.noteGuid + '">';
       html += '<div class="note-actions"><i class="synced fa fa-check-circle hidden"></i><a href="/note/' + note.guid + '" data-toggle="modal" data-target="#modalNote"><i class="fa fa-pencil"></i></a><a href="#" class="bookmark"><i class="bookmark fa fa-bookmark"></i></a><a href="/mail/' + note.guid + '" data-toggle="modal" data-target="#modalNote"><i class="fa fa-envelope"></i></a></div>';
