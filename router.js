@@ -100,12 +100,18 @@ module.exports = function(app, io, flowd, User) {
   app.get('/hook', function(req, res) {
     if (req.query.reason && req.query.reason == 'update') {
       io.sockets.emit('update', { query: req.query });
-      res.render('index');
+      res.redirect('/');
     } else if (req.query.reason && req.query.reason == 'create') {
-      io.sockets.emit('create', {query: req.query});
-      res.render('index');
+      flowd.getNote(req.user, req.query.guid, function(err, result) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        io.sockets.emit('create', {note: result});
+        res.redirect('/');
+      });
     } else {
-      res.render('index');
+      res.redirect('/');
     }
   });
 

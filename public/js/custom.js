@@ -118,13 +118,20 @@ App = {
 
     // Create note
     App.socket.on('create', function(data) {
-      var query = data.query;
-      if (query.reason && query.reason === 'update') {
-        if (query.guid) {
-          // Todo
-          // $('div[data-guid=' + query.notebookGuid + '] .board-column-inner').prepend('<div class="note" data-guid="' + query.noteGuid + '"></div>');
-        }
+      var note = data.note;
+      var html = '<div class="note" data-guid="' + note.noteGuid + '">';
+      html += '<div class="note-actions"><i class="synced fa fa-check-circle hidden"></i><a href="/note/' + note.guid + '" data-toggle="modal" data-target="#modalNote"><i class="fa fa-pencil"></i></a><a href="#" class="bookmark"><i class="bookmark fa fa-bookmark"></i></a><a href="/mail/' + note.guid + '" data-toggle="modal" data-target="#modalNote"><i class="fa fa-envelope"></i></a></div>';
+      html += '<h4>' + note.title + '</h4>';
+      if (note.tags) {
+        html += '<p><small>';
+        note.tags.forEach(function(tag) {
+          html += tag + ' ';
+        });
+        html += '</p></small>';
       }
+      html += '<p>' + note.content+ '</p> ';
+      html += '</div>';
+      $('div[data-guid=' + note.notebookGuid + '] .board-column-inner').prepend(html);
     });
   }
 

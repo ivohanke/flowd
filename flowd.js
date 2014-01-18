@@ -10,6 +10,37 @@ module.exports = function() {
   var flowd = flowd || {};
   flowd = {
 
+  // Function to
+    getNote: function (user, noteGuid, callback) {
+      var token = user.evernoteToken,
+          client = new Evernote.Client({
+                token: token,
+                sandbox: true
+          }),
+          noteStore = client.getNoteStore();
+
+      noteStore.getNote(token, noteGuid, 1, 0, 0, 0, function(err, result) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        var note = result;
+        note.tags =[];
+        if (note.tagGuids) {
+          noteStore.getNoteTagNames(token, noteGuid, 1, 0, 0, 0, function(err, result) {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            note.tags = result;
+            callback(null, note);
+          });
+        } else {
+          callback(null, note);
+        }
+      });
+    },
+
     // Function to
     getNotes: function (user, noteFilter, callback) {
       var token = user.evernoteToken,
