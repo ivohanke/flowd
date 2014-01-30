@@ -5,13 +5,44 @@ App = {
 
   initialize: function() {
     this.handleBookmark();
+    this.handleHybernate();
+    this.handleModal();
     this.handleDragDrop();
     this.handleSockets();
   },
 
   handleBookmark: function() {
     $('.note .bookmark').on('click', function() {
+      $(this).parent().parent().removeClass('hybernated');
       $(this).parent().parent().toggleClass('emphasized');
+    });
+  },
+
+  handleHybernate: function() {
+    $('.note .hybernate').on('click', function() {
+      $(this).parent().parent().removeClass('emphasized');
+      $(this).parent().parent().toggleClass('hybernated');
+    });
+  },
+
+  handleModal: function() {
+    $('#modalEdit .modal').on('shown.bs.modal', function (e) {
+      if (tinymce) {
+        window.setTimeout(function() {
+          console.log('loading tinymce');
+          tinymce.init({
+            selector: '#modalEdit .modal-body'
+            //skin: 'light',
+            //menubar: false
+          });
+        }, 2000);
+
+      }
+    });
+
+    $('.modal').on('hidden.bs.modal', function (e) {
+      $('.modal-body').empty();
+       $('.modal-title').html('loading...');
     });
   },
 

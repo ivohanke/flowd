@@ -8,7 +8,12 @@
             <div class="board-column-inner">
               {{#each this.content}}
                 <div class="note" data-guid="{{this.guid}}" draggable="true">
-                  <div class="note-actions"><i class="synced fa fa-check-circle hidden"></i><a href="/note/{{this.guid}}" data-toggle="modal" data-target="#modalNote"><i class="fa fa-pencil"></i></a><a href="#" class="bookmark"><i class="bookmark fa fa-bookmark"></i></a><a href="/mail/{{this.guid}}" data-toggle="modal" data-target="#modalNote"><i class="fa fa-envelope"></i></a></div>
+                  <div class="note-actions"><i class="synced fa fa-check-circle hidden"></i>
+                    <a href="/note/{{this.guid}}" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-pencil"></i></a>
+                    <a href="#" class="bookmark"><i class="bookmark fa fa-bookmark"></i></a>
+                    {{!-- <a href="#" class="hybernate"><i class="hybernate fa fa-moon-o"></i></a> --}}
+                    <a href="/mail/{{this.guid}}" data-toggle="modal" data-target="#modalSend"><i class="fa fa-envelope"></i></a>
+                  </div>
                   <h4 class="note-title">{{this.title}}</h4>
                   {{#if tags }}
                     <p class="note-tags"><small>{{this.tags}}</small></p>
@@ -31,7 +36,7 @@
     <section class="remark">
       <h3>Remark:</h3>
       <p><strong>flowd</strong> is under development running on the <a href="http://sandbox.evernote.com" >Evernote Sandbox</a> and not ready for production yet.</p>
-      <p>If you just want to have a look on the application, feel free to use the demo-account</p>
+      <p>If you just want to have a look on the application, feel free to use the demo-account:</p>
       <ul class="list-unstyled">
         <li>Login: <strong>qwer</strong></li>
         <li>Password: <strong>qwer</strong></li>
@@ -43,4 +48,5 @@
   </div>
 </div>
 
-<div class="modal fade" id="modalNote" tabindex="-1" role="dialog" aria-labelledby="modalNoteLabel" aria-hidden="true"></div>
+<div class="modal" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalNoteLabel" aria-hidden="true"></div>
+<div class="modal" id="modalSend" tabindex="-1" role="dialog" aria-labelledby="modalNoteLabel" aria-hidden="true"></div>

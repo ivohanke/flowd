@@ -141,7 +141,7 @@ passport.use(new EvernoteStrategy({
 hbs = exphbs.create({
   layoutsDir:'views/layouts/',
   partialsDir:'views/partials/',
-  defaultLayout: 'main',
+  defaultLayout: 'index',
   extname:'.handlebars',
   helpers: {
     compare: function (lvalue, operator, rvalue, options) {

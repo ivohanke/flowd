@@ -258,7 +258,7 @@ module.exports = function(app, io, flowd, User) {
         }
         // var $ = cheerio.load(note.content);
         // $('en-note div').html()
-        res.render('mail', { user: req.user, note: note, layout: 'mail'});
+        res.render('mail', { layout: 'mail', user: req.user, note: note,});
       });
 
     } else {
@@ -275,7 +275,7 @@ module.exports = function(app, io, flowd, User) {
           console.error(err);
           return;
         }
-        res.send(result);
+        res.render('note', {layout: 'note', note: result});
       });
     } else {
       res.redirect('/');
