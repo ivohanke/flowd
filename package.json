@@ -1,5 +1,5 @@
 {
-  "name": "flowd",
+  "name": "yes",
   "version": "0.0.2",
   "description": "Scrum based project management for Evernote",
   "main": "app.js",
@@ -18,7 +18,8 @@
     "request": "~2.27.0",
     "socket.io": "~0.9.16",
     "url": "~0.7.9",
-    "jquery": "~1.8.3"
+    "jquery": "~1.8.3",
+    "moment": "~2.5.1"
   },
   "devDependencies": {
     "grunt": "~0.4.2"

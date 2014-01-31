@@ -9,13 +9,16 @@
               {{#each this.content}}
                 <div class="note" data-guid="{{this.guid}}" draggable="true">
                   <div class="note-actions"><i class="synced fa fa-check-circle hidden"></i>
-                    <a href="/note/{{this.guid}}" data-toggle="modal" data-target="#modalEdit"><i class="fa fa-pencil"></i></a>
-                    <a href="#" class="bookmark"><i class="bookmark fa fa-bookmark"></i></a>
+                    <a data-toggle="modal" data-guid="{{this.guid}}" data-action="send" data-target="#modal"><i class="fa fa-pencil"></i></a>
+                    <a class="bookmark"><i class="bookmark fa fa-bookmark"></i></a>
                     {{!-- <a href="#" class="hybernate"><i class="hybernate fa fa-moon-o"></i></a> --}}
-                    <a href="/note/{{this.guid}}" data-toggle="modal" data-target="#modalSend"><i class="fa fa-envelope"></i></a>
+                    <a href="#" data-toggle="modal" data-guid="{{this.guid}}" data-action="send" data-target="#modal"><i class="fa fa-envelope"></i></a>
                   </div>
                   <h4 class="note-title">{{this.title}}</h4>
-                  {{#if tags }}
+                  {{#if this.updated}}
+                    <small>{{#formatDate this.updated }}{{/formatDate}}</small>
+                  {{/if}}
+                  {{#if this.tags }}
                     <p class="note-tags"><small>{{this.tags}}</small></p>
                   {{/if}}
                   <p class="note-content">{{this.content}}</p>
@@ -48,5 +51,21 @@
   </div>
 </div>
 
-<div class="modal" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalNoteLabel" aria-hidden="true"></div>
-<div class="modal" id="modalSend" tabindex="-1" role="dialog" aria-labelledby="modalNoteLabel" aria-hidden="true"></div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalNoteLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Loading... </h4>
+      </div>
+      <div class="modal-body">
+        <h3 class="modal-note-tags"></h3>
+        <div class="modal-note-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary disabled">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

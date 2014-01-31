@@ -13,6 +13,7 @@ var express = require('express'),
     mongodb = require('mongodb'),
     mongoose = require('mongoose'),
     bcrypt = require('bcrypt'),
+    moment = require('moment'),
     SALT_WORK_FACTOR = 10,
     hbs;
 
@@ -41,6 +42,11 @@ var userSchema = mongoose.Schema({
   evernoteInProgressNotebook: {type: String, required: false},
   evernoteTestNotebook: {type: String, required: false},
   evernoteDoneNotebook: {type: String, required: false},
+});
+
+var noteSchema = mongoose.Schema({
+  guid: {type: String, required: true, unique: true},
+  content: {type: String, required: true}
 });
 
 // Bcrypt middleware
@@ -136,8 +142,7 @@ passport.use(new EvernoteStrategy({
   }
 ));
 
-
-// Compare helper for Handelbars
+// Handelbars config
 hbs = exphbs.create({
   layoutsDir:'views/layouts/',
   partialsDir:'views/partials/',
@@ -181,6 +186,13 @@ hbs = exphbs.create({
       } else {
         return options.inverse(this);
       }
+    },
+
+    formatDate: function(datetime) {
+      if (arguments.length < 1) {
+        throw new Error('Handlerbars Helper "formatDate" needs a parameter');
+      }
+      return moment(datetime).calendar();
     }
   }
 });

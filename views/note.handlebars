@@ -11,6 +11,9 @@
       </div>
       <div class="modal-body">
         {{#if note}}
+          {{#if note.tags}}
+            <p><strong>{{{note.tags}}}</strong></p>
+          {{/if}}
           {{{note.content}}}
         {{else}}
           <p>There is obviously a problem!</p>

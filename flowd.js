@@ -10,7 +10,7 @@ module.exports = function() {
   var flowd = flowd || {};
   flowd = {
 
-  // Function to
+  // Get single
     getNote: function (user, guid, callback) {
       var token = user.evernoteToken,
           client = new Evernote.Client({
@@ -42,7 +42,7 @@ module.exports = function() {
       });
     },
 
-    // Function to
+    // Get all
     getNotes: function (user, noteFilter, callback) {
       var token = user.evernoteToken,
           client = new Evernote.Client({
@@ -50,8 +50,9 @@ module.exports = function() {
                 sandbox: true
           }),
           noteStore = client.getNoteStore();
+          noteSpec = new Evernote.NotesMetadataResultSpec({includeTitle: true, includeNotebookGuid: true, includeUpdated: true});
 
-      noteStore.findNotes(token, noteFilter, 0, 100, function(err, result) {
+      noteStore.findNotesMetadata(token, noteFilter, 0, 100, noteSpec, function(err, result) {
         if (err) {
           console.error(err);
           return;
@@ -93,7 +94,7 @@ module.exports = function() {
       });
     },
 
-    // Update note
+    // Update
     updateNote: function(user, note, notebook, callback) {
       var token = user.evernoteToken,
           client = new Evernote.Client({
