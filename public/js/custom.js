@@ -27,35 +27,52 @@ App = {
 
   handleModal: function() {
     $(document).on('shown.bs.modal', function (e) {
+      var html;
+      if ($(e.relatedTarget).data('action') == 'edit') {
+        $.ajax({
+          url: '/note/' + $(e.relatedTarget).data('guid'),
+          data: {
+            format: 'json'
+          },
+          success: function(result) {
+            $('.modal-title', e.target).html(result.title);
+            $('.modal-note-tags', e.target).html(result.tags);
+            $('.modal-note-content', e.target).html(result.content);
+            $('.modal-note-content', e.target).tinymce({
+              script_url : '/tinymce/tinymce.min.js',
+              skin: 'light',
+              menubar: false,
+              statusbar: false
+            });
+            $('.modal-footer button', e.target).html('Save changes');
+          },
+          error: function() {
 
-      $.ajax({
-        url: '/note/' + $(e.relatedTarget).data('guid'),
-        data: {
-          format: 'json'
-        },
-        success: function(result) {
-          $('.modal-title', e.target).html(result.title);
-          $('.modal-note-tags', e.target).html(result.tags);
-          $('.modal-note-content', e.target).html(result.content);
-
-          console.log('loading tinymce');
-          $('.modal-note-content', e.target).tinymce({
-            script_url : '/tinymce/tinymce.min.js',
-            skin: 'light',
-            menubar: false,
-            statusbar: false
-          });
-        },
-        error: function() {
-
-        }
-      });
+          }
+        });
+      } else if ($(e.relatedTarget).data('action') == 'send') {
+        $('.modal-title', e.target).html('Send note');
+        html = '<p>Send this note by mail</p>';
+        html += '<div class="form-group"><input type="text" class="form-control" placeholder="Enter email"></div>';
+        $('.modal-note-content', e.target).html(html);
+        $('.modal-footer button', e.target).html('Send');
+      } else if ($(e.relatedTarget).data('action') == 'create') {
+        $('.modal-title', e.target).html('Create new note');
+        $('.modal-note-content', e.target).tinymce({
+          script_url : '/tinymce/tinymce.min.js',
+          skin: 'light',
+          menubar: false,
+          statusbar: false
+        });
+        $('.modal-footer button', e.target).html('Save');
+      }
     });
 
     $(document).on('hidden.bs.modal', function (e) {
-      //$('.modal-note-content').tinymce().destroy();
-      $('.modal-title').html('Loading');
-      $('.modal-note-tags, .modal-note-content').empty();
+      $('.modal-note-content', e.target).tinymce().remove();
+      $('.modal-title', e.target).html('Loading');
+      $('.modal-note-tags', e.target).empty();
+      $('.modal-note-content', e.target).empty();
     });
   },
 
