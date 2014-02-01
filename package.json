@@ -1,6 +1,6 @@
 {
-  "name": "yes",
-  "version": "0.0.2",
+  "name": "flowd",
+  "version": "0.0.3",
   "description": "Scrum based project management for Evernote",
   "main": "app.js",
   "dependencies": {
@@ -38,5 +38,10 @@
   },
   "engines": {
     "node": "0.10.x"
-  }
+  },
+  "keywords": [
+    "Evernote",
+    "Scrum",
+    "Project-Management"
+  ]
 }

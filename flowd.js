@@ -4,7 +4,8 @@
 
 var Evernote = require('evernote').Evernote,
     async = require('async'),
-    cheerio = require('cheerio');
+    cheerio = require('cheerio'),
+    string = require('string');
 
 module.exports = function() {
   var flowd = flowd || {};
@@ -65,6 +66,7 @@ module.exports = function() {
               noteStore.getNoteContent(token, note.guid, function(err, content) {
                 var $ = cheerio.load(content);
                 note.content = $('en-note div').html();
+                note.content = string(note.content).stripTags().s;
                 callback(err, note);
               });
             },
