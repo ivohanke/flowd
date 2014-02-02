@@ -235,6 +235,7 @@ App = {
           $('.board-column').each(function(index, element) {
             $('.badge', element).html($('.note', element).length);
           });
+          App.handleDragDrop();
         },
         error: function(error) {
           var html = '<div class="note" data-guid="' + data.query.guid + '">';
