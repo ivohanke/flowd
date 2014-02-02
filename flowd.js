@@ -121,7 +121,7 @@ module.exports = function() {
         },
         function(err, updatedNote, callback) {
           if (err) {
-            callback(err, updateNote);
+            callback(err, updatedNote);
           } else {
             noteStore.updateNote(token, updatedNote, function(err, result) {
               callback(err, result);
