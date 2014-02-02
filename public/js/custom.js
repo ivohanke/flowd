@@ -219,6 +219,7 @@ App = {
         },
         success: function(result) {
           var html = '<div class="note" data-guid="' + result.guid + '" draggable="true">';
+          html += '<div class="note-updated light">' + result.updated + '</div>';
           html += '<div class="note-actions"><i class="synced fa fa-check-circle hidden"></i><a href="/note/' + result.guid + '" data-toggle="modal" data-target="#modalNote"><i class="fa fa-pencil"></i></a><a href="#" class="bookmark"><i class="bookmark fa fa-bookmark"></i></a><a href="/mail/' + result.guid + '" data-toggle="modal" data-target="#modalNote"><i class="fa fa-envelope"></i></a></div>';
           html += '<h4 class="note-title">' + result.title + '</h4>';
           if (result.tags) {
@@ -226,7 +227,7 @@ App = {
             result.tags.forEach(function(tag) {
               html += tag + ' ';
             });
-            html += '</p></small>';
+            html += '</small></p>';
           }
           html += '<p class="note-content">' + result.content + '</p> ';
           html += '</div>';
