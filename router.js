@@ -182,7 +182,7 @@ module.exports = function(app, io, flowd, User) {
     }
   });
 
-  app.post('/account/:action', function(req, res, next){
+  app.post('/account/:action', ensureAuthenticated, function(req, res, next){
     if (req.param('action') == 'config') {
       if (req.body.evernoteTodoNotebook && req.body.evernoteInProgressNotebook && req.body.evernoteTestNotebook && req.body.evernoteDoneNotebook) {
         User.findOne({username: req.user.username}, function (err, user) {
@@ -242,31 +242,7 @@ module.exports = function(app, io, flowd, User) {
 
 
   // Mail node partial
-  app.get('/mail/:note', function(req, res, next){
-    if(req.user && req.user.evernoteToken) {
-      var client = new Evernote.Client({
-            token: req.user.evernoteToken,
-            sandbox: true
-          }),
-          noteStore = client.getNoteStore();
-
-      // Get note with content
-      noteStore.getNote(req.user.evernoteToken, req.param('note'), true, false, false, false, function(err, note){
-        if (err) {
-          console.error(err);
-          return next(err);
-        }
-        // var $ = cheerio.load(note.content);
-        // $('en-note div').html()
-        res.render('mail', { layout: 'mail', user: req.user, note: note,});
-      });
-
-    } else {
-      res.redirect('/login');
-    }
-  });
-
-  app.get('/mail/:note', function(req, res, next){
+  app.get('/mail/:note', ensureAuthenticated, function(req, res, next){
     if(req.user && req.user.evernoteToken) {
       var client = new Evernote.Client({
             token: req.user.evernoteToken,
@@ -292,7 +268,7 @@ module.exports = function(app, io, flowd, User) {
 
 
   // Edit node partial
-  app.get('/note/:note', function(req, res, next){
+  app.get('/note/:note', ensureAuthenticated, function(req, res, next){
     if(req.user && req.user.evernoteToken) {
       flowd.getNote(req.user, req.param('note'), function(err, result) {
         if (err) {
@@ -307,6 +283,22 @@ module.exports = function(app, io, flowd, User) {
       });
     } else {
       res.redirect('/');
+    }
+  });
+
+  app.post('/note/create', ensureAuthenticated, function(req, res, next){
+    if (req.user && req.user.evernoteToken) {
+      if (req.body.note.title && req.body.note.content) {
+        flowd.createNote(req.user, req.body.note, function(err, result) {
+          if (err) {
+            console.error(err);
+            res.send({success: false, error: err});
+          }
+          res.send({success: true});
+        });
+      } else {
+        res.send({success: false, error: 'No data sent'});
+      }
     }
   });
 };

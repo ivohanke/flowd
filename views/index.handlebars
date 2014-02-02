@@ -1,7 +1,7 @@
 <div class="container">
   {{#if user}}
     {{#if board}}
-      <a class="btn btn-sm btn-primary" href="#" data-toggle="modal" data-action="create" data-target="#modal"><i class="add fa fa-plus-circle"></i> New task</a>
+      <a class="btn btn-sm btn-primary" href="#" data-toggle="modal" data-action="create" data-target="#modalCreate"><i class="add fa fa-plus-circle"></i> New task</a>
       <div class="col-xs-12 board">
         {{#each board}}
           <div class="col-xs-12 col-sm-3 board-column" data-guid="{{this.guid}}">
@@ -13,10 +13,10 @@
                     <div class="note-updated light">{{#formatDate this.updated }}{{/formatDate}}</div>
                   {{/if}}
                   <div class="note-actions"><i class="synced fa fa-check-circle hidden"></i>
-                    <a data-toggle="modal" data-guid="{{this.guid}}" data-action="edit" data-target="#modal"><i class="fa fa-pencil"></i></a>
+                    <a data-toggle="modal" data-guid="{{this.guid}}" data-action="edit" data-target="#modalEdit"><i class="fa fa-pencil"></i></a>
                     <a class="bookmark"><i class="bookmark fa fa-bookmark"></i></a>
                     {{!-- <a href="#" class="hybernate"><i class="hybernate fa fa-moon-o"></i></a> --}}
-                    <a href="#" data-toggle="modal" data-guid="{{this.guid}}" data-action="send" data-target="#modal"><i class="fa fa-envelope"></i></a>
+                    <a href="#" data-toggle="modal" data-guid="{{this.guid}}" data-action="send" data-target="#modalSend"><i class="fa fa-envelope"></i></a>
                   </div>
                   <h4 class="note-title">{{this.title}}</h4>
                   {{#if this.tags }}
@@ -53,7 +53,30 @@
 </div>
 
 
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalNoteLabel" aria-hidden="true">
+<div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="modalTaskLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Create task</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <input class="modal-note-title form-control" type="text" placeholder="Type in task title..." />
+        </div>
+        <div class="modal-note-tags"></div>
+        <div class="modal-note-action"></div>
+        <textarea class="modal-note-content" id="modal-note-content"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="create btn btn-primary">Create task</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalTaskLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -67,7 +90,35 @@
         <textarea class="modal-note-content" id="modal-note-content"></textarea>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary disabled">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalSend" tabindex="-1" role="dialog" aria-labelledby="modalTaskLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Loading... </h4>
+      </div>
+      <div class="modal-body">
+        <div class="modal-send">
+          <p>Send this task by mail</p>'
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Enter email">
+          </div>
+        </div>
+        <h3 class="modal-note-title"></h3>
+        <div class="modal-note-tags"></div>
+        <div class="modal-note-action"></div>
+        <textarea class="modal-note-content" id="modal-note-content"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary disabled">Send</button>
       </div>
     </div>
   </div>

@@ -134,6 +134,46 @@ module.exports = function() {
         // Successfully updated
         callback(null, result);
       });
+    },
+
+
+    createNote: function(user, note, callback) {
+      var token = user.evernoteToken,
+        client = new Evernote.Client({
+              token: token,
+              sandbox: true
+        }),
+        noteStore = client.getNoteStore();
+
+        var newNote = new Evernote.Note(),
+            newNoteBody;
+
+        newNote.title = note.title;
+
+        // Build body/content
+        newNoteBody = '<?xml version="1.0" encoding="UTF-8"?>';
+        newNoteBody += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">';
+        newNoteBody += '<en-note>';
+        newNoteBody += note.content;
+        newNoteBody += '</en-note>';
+
+        // Set content
+        newNote.content = newNoteBody;
+
+        // Set Notebook
+        newNote.notebookGuid = user.evernoteTodoNotebook;
+
+        // Create note
+        noteStore.createNote(newNote, function(result) {
+          if (note.errorCode) {
+            // Something was wrong with the note data
+            // See EDAMErrorCode enumeration for error code explanation
+            // http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
+            console.error(note.errorCode);
+          } else {
+            callback(null, result);
+          }
+        });
     }
   };
 
