@@ -26,7 +26,7 @@ module.exports = function() {
           return;
         }
         var $ = cheerio.load(note.content);
-            note.content = $('en-note div').html();
+            note.content = $('en-note').html();
 
         if (note.tagGuids) {
           noteStore.getNoteTagNames(token, guid, 1, 0, 0, 0, function(err, tags) {
@@ -65,7 +65,7 @@ module.exports = function() {
             getContent: function(note, callback) {
               noteStore.getNoteContent(token, note.guid, function(err, content) {
                 var $ = cheerio.load(content);
-                note.content = $('en-note div').html();
+                note.content = $('en-note').html();
                 note.content = string(note.content).stripTags().s;
                 callback(err, note);
               });
@@ -153,9 +153,9 @@ module.exports = function() {
         // Build body/content
         newNoteBody = '<?xml version="1.0" encoding="UTF-8"?>';
         newNoteBody += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">';
-        newNoteBody += '<en-note><div>';
+        newNoteBody += '<en-note>';
         newNoteBody += note.content;
-        newNoteBody += '</div></en-note>';
+        newNoteBody += '</en-note>';
 
         // Set content
         newNote.content = newNoteBody;
