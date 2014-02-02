@@ -119,7 +119,7 @@ module.exports = function() {
             }
           });
         },
-        function(updatedNote, callback) {
+        function(err, updatedNote, callback) {
           if (err) {
             callback(err, updateNote);
           } else {
