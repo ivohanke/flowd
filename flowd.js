@@ -110,20 +110,12 @@ module.exports = function() {
       async.waterfall([
         function(callback) {
           noteStore.getNote(token, note, false, false, false, false, function(err, result) {
-            if (err) {
-              callback(err, result);
-            } else {
-              var updatedNote = result;
-              updatedNote.notebookGuid = notebook; // update notebook guid
-              callback(null, updatedNote);
-            }
+            var updatedNote = result;
+            updatedNote.notebookGuid = notebook; // update notebook guid
+            callback(err, updatedNote);
           });
         },
-        function(err, updatedNote, callback) {
-          if (err) {
-            console.error(err);
-            return;
-          }
+        function(updatedNote, callback) {
           noteStore.updateNote(token, updatedNote, function(err, result) {
             callback(err, result);
           });
