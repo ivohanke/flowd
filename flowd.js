@@ -153,9 +153,9 @@ module.exports = function() {
         // Build body/content
         newNoteBody = '<?xml version="1.0" encoding="UTF-8"?>';
         newNoteBody += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">';
-        newNoteBody += '<en-note>';
+        newNoteBody += '<en-note><div>';
         newNoteBody += note.content;
-        newNoteBody += '</en-note>';
+        newNoteBody += '</div></en-note>';
 
         // Set content
         newNote.content = newNoteBody;
