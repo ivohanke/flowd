@@ -11,6 +11,10 @@
                 <div class="note" data-guid="{{this.guid}}" draggable="true">
                   {{#if this.updated}}
                     <div class="note-updated light">{{#formatDate this.updated }}{{/formatDate}}</div>
+                  {{else}}
+                    {{#if this.created}}
+                      <div class="note-updated light">{{#formatDate this.created }}{{/formatDate}}  </div>
+                    {{/if}}
                   {{/if}}
                   <div class="note-actions"><i class="synced fa fa-check-circle hidden"></i>
                     <a data-toggle="modal" data-guid="{{this.guid}}" data-action="edit" data-target="#modal"><i class="fa fa-pencil"></i></a>

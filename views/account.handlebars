@@ -34,7 +34,7 @@
       {{#if user.evernoteToken}}
         <form role="form" action="/account/config" method="post">
           <div class="form-group">
-            <label for="evernoteTodoNotebook">ToDo Notebook</label>
+            <label for="evernoteTodoNotebook">Tasks Notebook</label>
             <select class="form-control" name="evernoteTodoNotebook">
             {{#each notebooks}}
               {{#compare ../user.evernoteTodoNotebook "==" this.guid}}
@@ -58,7 +58,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="evernoteTestNotebook">Test Notebook</label>
+            <label for="evernoteTestNotebook">Test/QS Notebook</label>
             <select class="form-control" name="evernoteTestNotebook">
             {{#each notebooks}}
               {{#compare ../user.evernoteTestNotebook "==" this.guid}}
