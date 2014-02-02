@@ -272,6 +272,12 @@ App = {
     }
   },
 
+  deleteNote: function(data) {
+
+    var updatedSrcEl = $('div[data-guid=' + data.query.guid + ']');
+    updatedSrcEl.remove();
+  },
+
   handleSockets: function() {
     App.socket.on('message', function(message) {
       console.log(message);
@@ -301,6 +307,11 @@ App = {
     // Create note
     App.socket.on('create', function(data) {
       App.createNote(data);
+    });
+
+    // Delete note
+    App.socket.on('delete', function(data) {
+      App.deleteNote(data);
     });
   }
 };

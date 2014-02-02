@@ -99,8 +99,16 @@ module.exports = function(app, io, flowd, User) {
   // Webhook route
   app.get('/hook', function(req, res) {
     if (req.query.reason && req.query.reason == 'update') {
-      io.sockets.emit('update', {query: req.query});
-      res.send('great to see you');
+      if (req.query.notebookGuid != req.user.evernoteTodoNotebook &&
+          req.query.notebookGuid != req.user.evernoteInProgressNotebook &&
+          req.query.notebookGuid != req.user.evernoteTestNotebook &&
+          req.query.notebookGuid != req.user.evernoteDoneNotebook) {
+        io.sockets.emit('delete', {query: req.query});
+        res.send('great to see you');
+      } else {
+        io.sockets.emit('update', {query: req.query});
+        res.send('great to see you');
+      }
     } else if (req.query.reason && req.query.reason == 'create') {
       io.sockets.emit('create', {query: req.query});
       res.send('great to see you');
