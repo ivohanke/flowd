@@ -121,12 +121,12 @@ module.exports = function() {
         },
         function(err, updatedNote, callback) {
           if (err) {
-            callback(err, updatedNote);
-          } else {
-            noteStore.updateNote(token, updatedNote, function(err, result) {
-              callback(err, result);
-            });
+            console.error(err);
+            return;
           }
+          noteStore.updateNote(token, updatedNote, function(err, result) {
+            callback(err, result);
+          });
         }
       ], function(err, result) {
         if (err) {
