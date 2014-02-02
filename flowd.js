@@ -105,14 +105,19 @@ module.exports = function() {
                 token: token,
                 sandbox: true
           }),
-          noteStore = client.getNoteStore();
+          noteStore = client.getNoteStore(),
+          updatedNote;
 
       async.waterfall([
         function(callback) {
           noteStore.getNote(token, note, false, false, false, false, function(err, result) {
-            var updatedNote = result;
-            updatedNote.notebookGuid = notebook; // update notebook guid
-            callback(err, updatedNote);
+            if(err){
+              callback(err, result);
+            } else {
+              updatedNote = result;
+              updatedNote.notebookGuid = notebook; // update notebook guid
+              callback(err, updatedNote);
+            }
           });
         },
         function(updatedNote, callback) {
