@@ -1,7 +1,7 @@
 <div class="container">
   {{#if user}}
     {{#if board}}
-      <a class="btn btn-sm btn-primary" href="#" data-toggle="modal" data-action="create" data-target="#modal"><i class="add fa fa-plus-circle"></i> Create note</a>
+      <a class="btn btn-sm btn-primary" href="#" data-toggle="modal" data-action="create" data-target="#modal"><i class="add fa fa-plus-circle"></i> New task</a>
       <div class="col-xs-12 board">
         {{#each board}}
           <div class="col-xs-12 col-sm-3 board-column" data-guid="{{this.guid}}">

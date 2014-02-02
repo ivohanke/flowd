@@ -29,7 +29,7 @@ App = {
     $(document).on('shown.bs.modal', function (e) {
       var html;
       if ($(e.relatedTarget).data('action') == 'edit') {
-        $('.modal-title', e.target).html('Edit note');
+        $('.modal-title', e.target).html('Edit task');
         $('.modal-footer button', e.target).html('Save changes');
         $.ajax({
           url: '/note/' + $(e.relatedTarget).data('guid'),
@@ -51,8 +51,8 @@ App = {
           }
         });
       } else if ($(e.relatedTarget).data('action') == 'send') {
-        $('.modal-title', e.target).html('Send note');
-        html = '<div class="modal-send"><p>Send this note by mail</p>';
+        $('.modal-title', e.target).html('Send task');
+        html = '<div class="modal-send"><p>Send this task by mail</p>';
         html += '<div class="form-group"><input type="text" class="form-control" placeholder="Enter email"></div></div>';
         $('.modal-note-action', e.target).html(html);
         $('.modal-footer button', e.target).html('Send');
@@ -77,8 +77,8 @@ App = {
           }
         });
       } else if ($(e.relatedTarget).data('action') == 'create') {
-        $('.modal-title', e.target).html('Create new note');
-        $('#modal-note-content', e.target).tinymce({
+        $('.modal-title', e.target).html('Create new task');
+        $('#modal-note-content', e.target).empty().tinymce({
           script_url : '/tinymce/tinymce.min.js',
           skin: 'light',
           menubar: false,

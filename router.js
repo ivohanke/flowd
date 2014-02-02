@@ -29,7 +29,7 @@ module.exports = function(app, io, flowd, User) {
               obj = {};
           flowd.getNotes(req.user, todoFilter, function(err, result) {
             obj = {
-              title: 'Todo',
+              title: 'Backlog',
               guid: req.user.evernoteTodoNotebook,
               content: result
             };
@@ -53,7 +53,7 @@ module.exports = function(app, io, flowd, User) {
               obj = {};
           flowd.getNotes(req.user, testFilter, function(err, result) {
             obj = {
-              title: 'Test',
+              title: 'Test/QS',
               guid: req.user.evernoteTestNotebook,
               content: result
             };
